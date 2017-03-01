@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <style type="text/css">
+      *{padding: 0;margin: 0}
+      body{height: 2000px;}
+      #click-box{margin-top: 500px;height:120px;line-height:120px;background: yellow;border: 1px solid #e3e3e3; padding: 10px;background-color: #f5f5f5}
+      ul{background-color:#ffffff;border:1px solid  #d0d0d0;border-radius: 2px;width: 300px;position: fixed;display: none;box-sizing: border-box;padding-left: 37px;}
+      li{height:70px;line-height: 70px;list-style: none;}
+      .show{display:block;}
+      .hidden{display:none;}
+    </style>
+    <body>
+    <div id="click-box">点击我查看右侧悬浮框</div>
+    <ul id="contextmenu">
+      <li>Menu Item 1</li>
+      <li>Menu Item 2</li>
+    </ul>
+    </body>
+    <script type="text/javascript">
+      var ClickBox=document.getElementById("click-box");
+      var winHeight=window.innerHeight;
+      ClickBox.oncontextmenu=function(event){
+        var contextmenu=document.getElementById("contextmenu");
+        event.preventDefault();
+        event.stopPropagation();
+        contextmenu.className="hidden"
+         /* li的高度*/
+        var domLi=contextmenu.getElementsByTagName("li")[0];
+        var domLiHeight=(domLi.currentStyle? domLi.currentStyle : window.getComputedStyle(domLi, null)).height;
+          /* contextmenu的高度*/
+        var contextmenuHeight=parseInt(domLiHeight)*contextmenu.getElementsByTagName("li").length;
+           /* 当底部高度小于contextmenu的高度时*/
+        if((winHeight-event.clientY)<contextmenuHeight){
+          contextmenu.style.top="auto";
+          contextmenu.style.bottom=(winHeight-event.clientY)+"px";
+        }else{
+          contextmenu.style.top=event.clientY +"px";
+          contextmenu.style.bottom="auto";
+        }
+        contextmenu.style.left=event.clientX +"px";
+        contextmenu.className="show"
+      }
+
+      window.onmousedown=function(event){
+         contextmenu.className="hdden"
+       }
+      window.onscroll=function(){
+        contextmenu.className="hdden"
+      }
+
+    </script>
+</html>
