@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+        body,input,div{padding:0;margin: 0 }
+        .input-box{width: 280px;margin: 100px auto}
+        label{line-height: 17px;}
+        input{display:inline-block; vertical-align: middle;appearance:none;-moz-appearance:none;-webkit-appearance: none; outline: none; border: none;}
+        input[type="radio"]{height: 17px;width: 17px;background:url(input_bg.png) -24px -10px no-repeat;}
+        input[type="radio"]:checked{ background-position:-59px -10px}
+        input[type="checkbox"]{width: 17px;height:17px;background:url(input_bg.png) -24px -32px no-repeat;}
+        input[type="checkbox"]:checked{ background-position: -59px -32px ;}
+        </style>
+    </head>
+    <body>
+    <div class="input-box">
+    <label for="name"><input type="radio" name="sex">男</label>
+    <label for="name"><input type="radio" name="sex">女</label>
+    <label for="name"><input type="checkbox" name="hobby">编程</label>
+    <label for="name"><input type="checkbox" name="hobby">爬山</label>
+    </div>
+    </body>
+</html>
