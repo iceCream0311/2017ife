@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+    </body>
+    <script type="text/javascript" src="../three/three.js"></script>
+    <script type="text/javascript">
+
+       /********* ************1、创建画布******************/
+          var renderer=new THREE.WebGLRenderer();
+         renderer.setSize(900,537)
+         document.getElementsByTagName('body')[0].appendChild(renderer.domElement)
+         renderer.setClearColor('#404040');
+
+        /********************2、创建场景**************/
+          var scene = new THREE.Scene();
+
+        /********************3、创建正交投影照相机**************/
+
+           var camera = new THREE.OrthographicCamera(-5, 5, 5, -5, 1, 100);
+          camera.position.set(4,5,4);
+          camera.lookAt(new THREE.Vector3(0, 0, 0));
+          scene.add(camera);
+
+          var light = new THREE.PointLight(0xffffff, 2, 100);
+            light.position.set(6, 9, 6);
+            scene.add(light);
+          /*********************4、创建物体********************/
+          var cube = new THREE.Mesh(new THREE.CubeGeometry(3,4,1.8), //x、y、z
+            new THREE.MeshLambertMaterial({  color: "#858585", emissive: "#404040"}) //用来设置物体的颜色emissive: "#404040",
+          );
+          scene.add(cube);/*一定要把创建好的放到场景中*/
+
+          var wheel1 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), //radius是圆环半径；tube是管道半径；radialSegments与tubularSegments分别是两个分段数
+            new THREE.MeshLambertMaterial({  color: "#858585", emissive: "#404040" }) //用来设置物体的颜色
+          );
+          var wheel2 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18),
+            new THREE.MeshLambertMaterial({  color: "#858585", emissive: "#404040" }) //用来设置物体的颜色
+          );
+          wheel1.position.set(1.1, -2, 0.9);
+          wheel2.position.set(-0.8, -2, 0.9);
+          scene.add(wheel1);
+          scene.add(wheel2);
+
+
+        /***************************5、渲染**************************/
+        renderer.render(scene, camera);//渲染
+
+
+    </script>
+
+</html>
