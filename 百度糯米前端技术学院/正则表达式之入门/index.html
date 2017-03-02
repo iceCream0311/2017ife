@@ -27,8 +27,10 @@
       var strRex=/\b([A-Za-z]+)\s+\1\b/;
       $("#str_btn").onclick=function(){
         if (strRex.test($("#str").value)) {
-          alert(strRex.test($("#str").value))
-        }else{alert(strRex.test($("#str").value))}
+          alert("有相邻重复单词")
+        }else{
+          alert("没有相邻重复单词")
+        }
       }
       /*获取dom*/
       function $(dom){
