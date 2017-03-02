@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+          body{background-color: #fff}
+          #chart1{width: 500px;height: 500px;background-color: #bcbcbc;margin: 0 auto}
+
+        </style>
+    </head>
+    <script type="text/javascript" src="echarts.min.js"></script>
+    <body>
+    <div id="chart1"></div>
+    </body>
+    <script type="text/javascript">
+    /*初始化dom*/
+      var chart1=echarts.init(document.getElementById('chart1'))
+    /*图表的配置项和数据*/
+      var option = {
+          title: {
+              text: '用户统计表'
+            },
+            tooltip: {
+              /*trigger: 'item',单个显示*/
+              trigger: 'axis',
+              formatter:'{b0} <br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:#83bff6"></span>{a0}{c0}个<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:#1cc001"></span>{a1}{c1}个'
+              /*formatter:function(a,b){
+                var relVal = "";
+                relVal = a[0].value+"个 <br/>";
+                relVal += a[1].value+"个";
+                return relVal;
+              }*/
+            },
+            toolbox: {
+                feature: {
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            legend: {
+                data:['新增用户数','活跃用户数']
+            },
+            xAxis: {
+                data: ["1月","2月","3月","4月","5月","6月","7月"]
+            },
+            yAxis: {
+                 type: 'value',
+                 name: '个数',
+                 min: 0,
+                 max: 1000,
+                 interval: 100,
+                 axisLabel: {
+                     formatter: '{value}'
+                 },
+            },
+            series: [{
+                name: '新增用户数',
+                type: 'bar',
+                data: [155,300, 400,450, 405, 505, 605],
+                itemStyle:{
+                  normal: {
+                    color:new echarts.graphic.LinearGradient( 0, 0, 0, 1,
+                        [
+                          {offset: 0, color: '#83bff6'},
+                          {offset: 0.5, color: '#188df0'},
+                          {offset: 1, color: '#188df0'}
+                        ]
+                    ),
+                    formatter:function(b,c){
+                      return c+"个";
+                      }
+                  }
+                 }
+            },{
+                name: '活跃用户数',
+                type: 'line',
+                data: [500,600, 660,800, 750, 805, 905],
+                itemStyle:{
+                  normal: {color:"#1cc001"}
+                }
+            }]
+        };
+         chart1.setOption(option);
+    </script>
+</html>
