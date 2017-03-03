@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <style type="text/css">
+      .contener{width:450px;height: 270px;position: relative;margin: 100px auto }
+      .vague{background: url(imgbg.png) no-repeat;width:450px;height: 270px;}
+     /*  控制背景模糊 */
+      .contener:hover .vague{
+        filter: url(blur.svg#blur); /* FireFox, Chrome, Opera */
+        -webkit-filter: blur(6px);/* Chrome, Opera */
+        -moz-filter: blur(6px);
+        -ms-filter: blur(6px);
+        filter: blur(6px);
+        filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=10, MakeShadow=false);
+       }
+       /*  控制字体背景 */
+      .wellcome{width: 400px;height: 150px;position:absolute; top: 50%;left: 50%;margin-left: -200px;margin-top: -75px;text-align: center;font-size: 28px;line-height: 36px;font-family: "微软雅黑";background-size: 200% 100%;
+          background-image: -webkit-linear-gradient(left, #3880ce, #f010be 25%, #3880ce 50%, #f010be 75%, #3880ce 100%);
+          background-image: -o-linear-gradient(left, #3880ce, #f010be 25%, #3880ce 50%, #f010be 75%, #3880ce 100%);
+          background-image: linear-gradient(to right, #3880ce, #f010be 25%, #3880ce 50%, #f010be 75%, #3880ce 100%);
+          -webkit-text-fill-color:transparent;
+          -webkit-background-clip:text;
+          -webkit-animation:masked-animation 1s infinite linear;
+          overflow: hidden;
+      }
+      @-webkit-keyframes masked-animation{
+         0%{background-position:0 0}100%{background-position:-100% 0}
+      }
+      /*  控制border */
+      .wellcome:after{content: "";width: 0;height: 100%;border-top: 4px solid #fff;border-bottom: 4px solid #fff;position: absolute;top: 0;left:50%;box-sizing: border-box;transition:  all 2s;}
+      .wellcome:before{content: "";width: 100%;height: 0;border-left: 2px solid #fff;border-right:2px solid #fff;position: absolute;top: 50%;left:0;box-sizing: border-box;
+        transition: all 2s;}
+        /*  控制内容的出现隐藏 */
+      .name{width: 0;overflow: hidden;}
+      .contener:hover .name{width: 400px;}
+      .contener:hover .wellcome:after{width: 100%;left: 0}
+      .contener:hover .wellcome:before{height: 100%;top: 0}
+    </style>
+    <body>
+      <div class="contener">
+        <div class="vague"></div>
+          <div class="wellcome">
+            <div class="name">
+              <p>欢迎参加百度前端技术学院</p>
+              <p>点击报名</p>
+            </div>
+          </div>
+      </div>
+    </body>
+</html>
