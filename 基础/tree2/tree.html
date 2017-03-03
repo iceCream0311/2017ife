@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+     * { margin: 0;padding: 0}
+    #tree{height: 300px;margin:100px auto;box-sizing: border-box;font-color:#000;}
+    div {height:268px;border: 2px solid #000;padding: 16px;display: flex;flex-grow: 1;margin-right:5px;background-color: #fff; }
+    span{color:#000;}
+    div>div{height:232px; border-color: pink}
+     div>div>div{height:198px; border-color: purple}
+     div>div>div>div{height:160px; border-color: skyblue}
+     div>div>div>div>div{height:120px; border-color: green}
+     .blue{background-color: blue}
+     .blue span,.red span{color:#fff;}
+     .blue div span,.red div span{color:#000;}
+     .red{font-weight:800;background-color: red !important;}
+     button{width:60px;height: 28px;background-color: #2F91EC;color:#fff;}
+     .yellow{background-color:#FFA64D}
+    </style>
+</head>
+
+<body>
+    <div id="tree">
+        <span>supper</span>
+        <div>
+            <span>can</span>
+            <div>
+                <span>apple</span>
+                <div><span>perter</span></div>
+                <div><span>pig</span></div>
+                <div><span>Color</span></div>
+            </div>
+            <div><span>phone</span></div>
+            <div>
+                <div><span>book</span></div>
+                <div><span>school</span></div>
+            </div>
+        </div>
+        <div>
+            <span>note</span>
+            <div>
+                <span>human</span>
+                <div><span>code</span></div>
+                <div><span>Operate</span></div>
+                <div><span>man</span></div>
+            </div>
+            <div>
+                <span>program</span>
+                <div><span>bement</span>
+                    <div>cat</div>
+                </div>
+                <div><span>Gats</span></div>
+            </div>
+        </div>
+      <div>
+        <span>path</span>
+      </div>
+    </div>
+<button id="deep">深度</button>
+<button id="qian">广度</button>
+<input id="search" type="text" placeholder="请输入您想查询的内容">
+<button id="searchbtn">搜索</button>
+<input type="text" placeholder="请输入想插入的内容" id="addDomText">
+<button id="addDom">添加</button>
+<button id="reDom">删除元素</button>
+</body>
+<script type="text/javascript" src="tree.js"></script>
+
+</html>
