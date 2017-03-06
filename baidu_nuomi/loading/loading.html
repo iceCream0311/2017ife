@@ -7,12 +7,82 @@
       *{margin:0;padding:0;}
        html,body{background-color: #fff}
       .circle-box{width: 200px;height: 200px;position: absolute;left: 50%;top: 50%;margin-top:-100px;margin-left:-100px;}
-      .cicle-ring{width: 100%;height: 100%;border:1px solid #ff298c;border-radius: 50%;position: absolute;}
+      .cicle-ring{width: 100%;height: 100%;border:1px solid #ff298c;border-radius: 50%;position: absolute;animation:  ringmove 1.5s linear infinite;}
       .cicle-ring:before{content:"";width: 50px;height:50px;background-color: #fff; position: absolute;z-index: 1}
-     .cicle-full,.cicle-hand1,.cicle-hand2 {width: 100px;height: 100px;border-radius: 50%;position: absolute;top:50%;left: 50%;margin-top: -50px;margin-left: -50px;box-sizing: border-box}
-      .cicle-full{border: 50px solid #ff298c;border-right-color:#fb8bbd;border-bottom-color:#fb8bbd  }
-      .cicle-hand1{border: 50px solid #ff298c;border-top-color:transparent;border-left-color: transparent;border-radius: 50% ;transform:rotate(45deg)}
-      .cicle-hand2{border: 50px solid #fb8bbd;border-right-color:transparent;border-bottom-color: transparent;border-radius: 50% ;animation: 2s }
+      .cicle-full,.cicle-hand1,.cicle-hand2 {width: 100px;height: 100px;border-radius: 50%;position: absolute;top:50%;left: 50%;margin-top: -50px;margin-left: -50px;box-sizing: border-box;}
+      .cicle-full{ border: 50px solid #ff298c; border-right-color:#fb8bbd; border-top-color:#fb8bbd; }
+       .cicle-hand1{border: 50px solid #ff298c;border-top-color:transparent;border-right-color: transparent;border-radius: 50% ; animation:  ciclemove1 1.5s linear  infinite ;;z-index: 2}
+      .cicle-hand2{border: 50px solid #fb8bbd;border-left-color:transparent;border-bottom-color: transparent;border-radius: 50% ; animation: ciclemove2 1.5s linear   infinite   ;z-index:1;
+      }
+      @keyframes ciclemove1 {
+        0%{
+         z-index: 3;
+         transform: rotate(0deg)
+        }
+        20%{
+          z-index: 3;
+         transform: rotate(180deg)
+             }
+        40%{
+          z-index: 2;
+         transform: rotate(180deg)
+        }
+        60%{
+          z-index: 3;
+         transform: rotate(270deg)
+      }
+      70%{
+        z-index: 3;
+        transform: rotate(360deg)
+      }
+       80%{
+        z-index: 3;
+        transform: rotate(360deg)
+      }
+      100%{
+        z-index: 1;
+        transform: rotate(360deg)
+      }
+       }
+    @keyframes ciclemove2 {
+     0%{
+      z-index: 1;
+      transform: rotate(0deg)
+     }
+     20%{
+       z-index: 1;
+      transform: rotate(0deg)
+     }
+     40%{
+       z-index: 1;
+      transform: rotate(180deg)
+     }
+    60%{
+       z-index: 2;
+      transform: rotate(180deg)
+     }
+     65%{
+      z-index: 1;
+      transform: rotate(180deg)
+    }
+     75%{
+          z-index: 1;
+          transform: rotate(270deg)
+     }
+     85%{
+       z-index: 1;
+      transform: rotate(360deg)
+     }
+     100%{
+       z-index: 3;
+      transform: rotate(540deg)
+     }
+
+     }
+       @keyframes ringmove{
+      0%{transform: rotate(0deg)}
+      100%{transform: rotate(360deg)}
+     }
     </style>
     <body>
       <div class="circle-box">
@@ -20,6 +90,7 @@
         <div class="cicle-full">
           <div class="cicle-hand1"></div>
           <div class="cicle-hand2"></div>
+
         </div>
 
       </div>
