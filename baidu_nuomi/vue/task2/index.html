@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <script type="text/javascript">
+    /*  观察者构造函数*/
+    var Observer = function(data) {
+        this.data = data;
+        this.walk = function(data) {
+            let val;
+            for (let key in data) {
+                /* 这里为什么要用hasOwnProperty进行过滤呢？ 因为for...in 循环会把对象原型链上的所有可枚举属性都循环出来， 而我们想要的仅仅是这个对象本身拥有的属性，所以要这么做。*/
+                if (data.hasOwnProperty(key)) {
+                    val = data[key];
+                    /*这里进行判断，如果还没有遍历到最底层，继续new Observer*/
+                    if (typeof val === 'object') {
+                        new Observer(val);
+                    }
+                    this.convert(key, val, function() {});
+                }
+            }
+        }
+        this.convert = function(key, val, callback) {
+            Object.defineProperty(this.data, key, {
+                enumerable: true,
+                configurable: true,
+                get: function() {
+                    console.log('你访问了' + key);
+                    return val
+                },
+                set: function(newVal) {
+                    console.log('你设置了' + key);
+                    console.log('新的值为' + newVal)
+                    callback(newVal);
+                    if (newVal === val) return;
+                    val = newVal
+                }
+            })
+        };
+        this.walk(data)
+        this.$watch = function(key, callback) {
+            if (this.hasOwnProperty(key)) {
+                val = this[key];
+                if (typeof val === 'object') {
+                    this.convert(key, this[key], callback);
+                }
+
+            } else {
+                this.convert(key, this[key], callback);
+            }
+        };
+    }
+
+
+    let app1 = new Observer({
+        name: 'youngwind',
+        age: 25
+    });
+    app1.$watch("age", function(age) {
+        console.log("我的年龄变了现在是${age}岁")
+    })
+    app1.data.age = 24
+    let app2 = new Observer({
+        university: 'bupt',
+        major: 'computer'
+    });
+    </script>
+</body>
+
+</html>
