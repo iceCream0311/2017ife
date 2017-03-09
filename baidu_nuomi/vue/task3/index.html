@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <script type="text/javascript">
+    /*  观察者构造函数*/
+    var Observer = function(data) {
+        this.walk = function() {
+            let val;
+            for (let key in data) {
+                this[key] = data[key];
+                /* 这里为什么要用hasOwnProperty进行过滤呢？ 因为for...in 循环会把对象原型链上的所有可枚举属性都循环出来， 而我们想要的仅仅是这个对象本身拥有的属性，所以要这么做。*/
+                if (data.hasOwnProperty(key)) {
+                    val = data[key];
+                    /*这里进行判断，如果还没有遍历到最底层，继续new Observer*/
+                    if (typeof val === 'object') {
+                        new Observer(val);
+                    }
+                    this.convert(data, key, val, function() {});
+                }
+            }
+        }
+
+        this.convert = function(obj, key, val, callback) {
+            Object.defineProperty(obj, key, {
+                enumerable: true,
+                configurable: true,
+                get: function() {
+                    // console.log('你访问了' + key);
+                    return val
+                },
+                set: function(newVal) {
+                    // console.log('你设置了' + key);
+                    // console.log('新的值为' + newVal)
+                    callback(newVal);
+                    if (newVal === val) return;
+                    val = newVal
+                }
+            })
+        };
+        this.$watch = function(key, callback) {
+            for (let keyitem in this[key]) {
+                if (this[key].hasOwnProperty(keyitem)) {
+                    val = this[key][keyitem];
+                    this.convert(this[key], keyitem, val, callback);
+
+                } else {
+                    this.convert(this, key, this[key], callback);
+                }
+            }
+
+        };
+        this.walk()
+    }
+
+
+    let app1 = new Observer({
+        name: {
+            lastname: "xoao",
+            firstname: "xixix"
+        },
+        age: 25
+    });
+    app1.$watch("name", function() {
+        console.log("'我的姓名发生了变化，可能是姓氏变了，也可能是名字变了。")
+    })
+    app1.name.lastname = 'dfdf'
+    </script>
+</body>
+
+</html>
