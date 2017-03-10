@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <div id="app">
+        <p>姓名：{{user.name}}</p>
+        <p>姓名：{{user.lastname.name}}</p>
+        <p>年龄：{{user.age}}</p>
+    </div>
+</body>
+<script type="text/javascript">
+/*****定义****/
+function Vue(data) {
+    if (!(data.el)) {
+        throw "没有绑定元素";
+        return;
+    }
+    let doms = document.querySelectorAll(data.el);
+    let Rexhtml = /\{\{(.+?)\}\}/g; //正则匹配所有{{}}内容
+    let newdomhtml = []
+    doms.forEach((dom) => {
+        let domhtml = dom.innerHTML; //得到元素的html
+        if (domhtml.match(Rexhtml)) {
+            let dommatch = domhtml.match(Rexhtml)
+            for (let i = 0; i < dommatch.length; i++) {
+                // newdomhtml.push(dommatch[i].replace(/[{}]/g, '').match(/(\w+)+?/g)); //得到数组["user","name","user","age"]
+                newdomhtml.push(dommatch[i].replace(/[{}]/g, '')); //去掉{{}}得到数组["user.name","user.age"]
+            }
+
+        }
+        /*循环上面得到的{{}}数组，得到对应的data的值*/
+        let tempStr = domhtml;
+        for (let j = 0; j < newdomhtml.length; j++) {
+            let datas = data.data;
+            let arrdata = newdomhtml[j].split(".");
+            for (let i = 0; i <= arrdata.length - 1; i++) {
+                datas = datas[arrdata[i]];
+            }
+            tempStr = tempStr.replace('{{' + newdomhtml[j] + '}}', datas) //匹配{{xxx}}的内容改成对应的值
+        }
+        dom.innerHTML = tempStr
+    })
+}
+
+/* -- 调用 -- */
+let app = new Vue({
+    el: '#app',
+    data: {
+        user: {
+            name: 'youngwind',
+            age: 25,
+            lastname: {
+                name: "hah"
+            }
+        }
+    }
+});
+</script>
+
+</html>
