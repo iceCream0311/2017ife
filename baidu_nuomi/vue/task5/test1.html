@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <div id="app">
+        <p>姓名：{{user.name}}</p>
+        <p>年龄：{{user.age}}</p>
+    </div>
+    <script type="text/javascript">
+    function Vue(data) {
+        if (!(data.el)) {
+            throw "没有绑定元素";
+            return;
+        }
+        /*所匹配位置应该为固定html，由于替换了就缺少了{{}}，所以我们需要的是一个全局的变量*/
+        var dom = document.querySelector(data.el);
+        var Rexhtml = /\{\{(.+?)\}\}/g; //正则匹配所有{{}}内容
+        var newdomhtml = []
+        var domhtml = dom.innerHTML; //得到元素的html
+        if (domhtml.match(Rexhtml)) {
+            var dommatch = domhtml.match(Rexhtml)
+            for (let i = 0; i < dommatch.length; i++) {
+                newdomhtml.push(dommatch[i].replace(/[{}]/g, '')); //去掉{{}}得到数组["user.name","user.age"]
+            }
+        }
+        this.init = function() {
+            render(data);
+            this.walk(data)
+        }
+
+        let render = function(data) {
+            /*循环上面得到的{{}}数组，得到对应的data的值*/
+            let tempStr = domhtml;
+            for (let j = 0; j < newdomhtml.length; j++) {
+                let datas = data.data;
+                let arrdata = newdomhtml[j].split(".");
+                for (let i = 0; i <= arrdata.length - 1; i++) {
+                    datas = datas[arrdata[i]];
+                }
+                tempStr = tempStr.replace('{{' + newdomhtml[j] + '}}', datas) //匹配{{xxx}}的内容改成对应的值
+            }
+            dom.innerHTML = tempStr
+
+        }
+        this.walk = function(data) {
+            let val;
+            for (let key in data) {
+                this[key] = data[key];
+                /* 这里为什么要用hasOwnProperty进行过滤呢？ 因为for...in 循环会把对象原型链上的所有可枚举属性都循环出来， 而我们想要的仅仅是这个对象本身拥有的属性，所以要这么做。*/
+                if (data.hasOwnProperty(key)) {
+                    val = data[key];
+                    /*这里进行判断，如果还没有遍历到最底层，继续new Observer*/
+                    if (typeof val === 'object') {
+                        this.walk(val);
+                    }
+                    this.convert(data, key, val, function() {});
+                }
+            }
+        }
+        this.convert = function(obj, key, val, callback) {
+            Object.defineProperty(obj, key, {
+                enumerable: true,
+                configurable: true,
+                get: function() {
+                    // console.log('你访问了' + key);
+                    return val
+                },
+                set: function(newVal) {
+                    // console.log('你设置了' + key);
+                    console.log('新的值为' + newVal)
+                    callback(newVal);
+                    if (newVal === val) return;
+                    val = newVal
+                    render(data)
+                }
+            })
+        };
+        this.$watch = function(key, callback) {
+
+            let datas = data;
+            let arrdata = key.split(".");
+            for (let i = 0; i <= arrdata.length - 1; i++) {
+                datas = datas[arrdata[i]];
+            }
+
+            this.convert(this, arrdata[arrdata.length - 1], datas, callback);
+            /*  console.log(datas)
+              for (let keyitem in this[key]) {
+                  if (this[key].hasOwnProperty(keyitem)) {
+                      val = this[key][keyitem];
+                      this.convert(this[key], keyitem, val, callback);
+
+                  } else {
+                      this.convert(this, key, this[key], callback);
+                  }
+              }*/
+        };
+
+        this.init()
+    }
+
+    /* -- 调用 -- */
+    let app = new Vue({
+        el: '#app',
+        data: {
+            user: {
+                name: 'youngwind',
+                age: 25
+            },
+            school: 'bupt',
+            major: 'computer'
+        }
+    });
+
+    app.data.user.name = 'dfdf'
+    app.$watch("data.school", function() {
+        console.log("'我的学校变量。")
+    })
+    app.data.school = 'dfdf'
+    </script>
+</body>
+
+</html>
