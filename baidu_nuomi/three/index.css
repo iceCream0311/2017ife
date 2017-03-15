@@ -1,0 +1,12 @@
+ *{padding: 0;margin: 0}
+  #side_bar {margin-top:50px;padding-top: 50px;background-color: #f0f6e4;min-width: 200px;position: absolute;padding-bottom: 50px;}
+  label{display: inline-block;position:relative;line-height: 23px;font-size: 23px;padding: 7px 60px 7px 20px;}
+  label:before{content:"+";position: absolute;top:50%;left: 0;border: 1px solid #93aec0;width: 14px;height: 14px;font-size:14px;line-height:14px;text-align:center;background-color: #f8f7f4;margin-top: -7px;}
+  label:after{content:" - 展开";font-size:18px;width: 50px;height: 23px;line-height: 23px;;position: absolute;top: 50%;right: 0;margin-top: -11px; }
+  span{line-height: 23px;font-size: 23px;padding: 7px 0;display: inline-block;}
+  div{padding-left: 13px;}
+ input~div{display: none}
+  input{display: none;}
+  input:checked+label:before{content:"-";}
+  input:checked+label:after{content:" - 折叠";}
+  input:checked~div{display: block;}
