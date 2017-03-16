@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+    body {
+        background-color: #fff
+    }
+    
+    #chart1 {
+        width: 700px;
+        height: 600px;
+        margin: 0 auto;
+        padding-top: 20px;
+    }
+    </style>
+</head>
+<script type="text/javascript" src="../echarts.min.js"></script>
+
+<body>
+    <div id="chart1"></div>
+</body>
+<script type="text/javascript">
+/*初始化dom*/
+var chart1 = echarts.init(document.getElementById('chart1'))
+    /*图表的配置项和数据, 'Sources:world Bank;Census Bureau;EIU']*/
+var option = {
+    backgroundColor: "#d7e3eb",
+    title: [{
+        text: "Whta's my credit score?",
+        left: '5%',
+        subtext: 'Pruerto Rico,% decrease on year earlier',
+        textStyle: {
+            color: "#333",
+            fontSize: 28
+        },
+        subtextStyle: {
+            color: "#333",
+            fontSize: 20
+        }
+
+    }, {
+        /*表下面的标题*/
+        text: "Sources:world Bank;Census Bureau;EIU",
+        textStyle: {
+            color: "#333",
+            fontSize: 20,
+            fontWeight: "normal"
+        },
+        left: '5%',
+        bottom: " 3%"
+    }],
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        },
+
+    },
+    legend: {
+        data: ['Population', 'GDP'],
+        left: '5%',
+        top: 85,
+        padding: 0,
+        textStyle: {
+            fontSize: 16,
+            color: "#000"
+        }
+    },
+    grid: {
+        left: '5%',
+        right: '4%',
+        bottom: '10%',
+        top: "15%",
+        containLabel: true
+    },
+
+    xAxis: [{
+        type: 'category',
+        data: ["2006", "07", "08", "09", "10", "11", "12"],
+        /*
+        x轴标题
+         name: "haha",
+        show: true,
+        nameLocation: "start",
+        nameTextStyle: {
+            fontSize: 28,
+            bottom: "3%",
+            right: "0",
+            color: "#333"
+        },*/
+        axisLine: {
+            /*控制坐标在下面*/
+            onZero: false,
+            lineStyle: {
+                color: '#000'
+            }
+        }
+    }, {
+        /*第二条轴线红色*/
+        z: 10,
+        axisLine: {
+            lineStyle: {
+                color: 'red',
+                width: 2
+            }
+        }
+    }],
+    yAxis: {
+        type: 'value',
+        /*控制在右侧*/
+        position: "right",
+        /*控制数据从上往下*/
+        inverse: true,
+        /*控制最大值*/
+        max: 4,
+        axisLine: {
+            lineStyle: {
+                color: 'transparent'
+            }
+        },
+        axisLabel: {
+            show: true,
+            textStyle: {
+                color: '#000'
+            }
+        },
+        /*控制辅助线*/
+        splitLine: {
+            lineStyle: {
+                color: '#fff',
+                width: 2
+            }
+        },
+    },
+    series: [{
+        name: 'Population',
+        type: 'bar',
+        data: [1, 2.5, 3.4, 2.5, 1.5, 3.4, 2.5],
+        itemStyle: {
+            normal: {
+                color: "#32748b"
+            },
+            emphasis: {
+                barBorderWidth: 1,
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowOffsetY: 0,
+                shadowColor: 'rgba(0,0,0,0.5)'
+            }
+        },
+        /*控制间隙*/
+        barGap: 0
+    }, {
+        name: 'GDP',
+        type: 'bar',
+        data: [2, 1, 1.5, 2.7, 1, 2, 3.5],
+        itemStyle: {
+            normal: {
+                color: "#32b5e3"
+            },
+            emphasis: {
+                barBorderWidth: 3,
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowOffsetY: 0,
+                shadowColor: 'rgba(0,0,0,0.5)'
+            }
+        }
+    }]
+};
+chart1.setOption(option);
+</script>
+
+</html>
