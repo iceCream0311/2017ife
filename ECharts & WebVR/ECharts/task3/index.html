@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+    body {
+        background-color: #fff
+    }
+    
+    #myEcharts {
+        position: relative;
+        overflow: hidden;
+        width: 786px;
+        height: 310px;
+        padding: 0px;
+        margin: 0px;
+        border-width: 0px;
+        cursor: default;
+    }
+    </style>
+</head>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+
+<body>
+    <div id="myEcharts"></div>
+</body>
+<script type="text/javascript">
+var data = [];
+/*获取数据*/
+var xhr = null;
+if (XMLHttpRequest) {
+    xhr = new XMLHttpRequest()
+} else {
+    xhr = new ActiveXObject("Microsoft.XMLHTTP")
+}
+xhr.open("get", "./ne_110m_geography_regions_polys.json", false);
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+        if (xhr.status == 200) {
+            data = JSON.parse(xhr.responseText).features
+        } else {
+            alert("服务器错误")
+        }
+    }
+}
+xhr.send(null)
+console.log(data)
+var myEcharts = echarts.init(document.getElementById('myEcharts'))
+var option = {
+    backgroundColor: '#404a59',
+    title: {
+        text: '地图',
+        subtext: 'data from  naturalearth',
+        sublink: 'http://www.naturalearthdata.com',
+        x: 'center',
+        textStyle: {
+            color: '#fff'
+        }
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            return params.properties.name + ' : ' + params.geometry.coordinates[1];
+        }
+    },
+    legend: {
+        orient: 'vertical',
+        y: 'bottom',
+        x: 'right',
+        data: ['pm2.5'],
+        textStyle: {
+            color: '#fff'
+        }
+    },
+    visualMap: {
+        min: 0,
+        max: 200,
+        calculable: true,
+        inRange: {
+            color: ['#50a3ba', '#eac736', '#d94e5d']
+        },
+        textStyle: {
+            color: '#fff'
+        }
+    },
+    geo: {
+        map: 'china',
+        label: {
+            emphasis: {
+                show: false
+            }
+        },
+        itemStyle: {
+            normal: {
+                areaColor: '#323c48',
+                borderColor: '#111'
+            },
+            emphasis: {
+                areaColor: '#2a333d'
+            }
+        }
+    },
+    series: [{
+        name: 'pm2.5',
+        type: 'scatter',
+        coordinateSystem: 'geo',
+        data: data,
+        symbolSize: 12,
+        label: {
+            normal: {
+                show: false
+            },
+            emphasis: {
+                show: false
+            }
+        },
+        itemStyle: {
+            emphasis: {
+                borderColor: '#fff',
+                borderWidth: 1
+            }
+        }
+    }]
+}
+
+myEcharts.setOption(option);
+</script>
+
+</html>
