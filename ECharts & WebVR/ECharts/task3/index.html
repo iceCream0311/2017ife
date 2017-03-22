@@ -7,7 +7,7 @@
     body {
         background-color: #fff
     }
-    
+
     #myEcharts {
         width: 100vw;
         height: 100vh;
@@ -21,9 +21,7 @@
 </body>
 <script type="text/javascript">
 var myEcharts = echarts.init(document.getElementById('myEcharts'))
-var data = [],
-    city = [],
-    index = 1;;
+var data = [];
 /*获取数据*/
 var xhr = null;
 if (XMLHttpRequest) {
