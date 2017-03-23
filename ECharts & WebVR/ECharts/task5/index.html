@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+    body {
+        background-color: #fff
+    }
+    
+    #myEcharts {
+        width: 1000px;
+        height: 700px;
+        margin: 0 auto;
+    }
+    </style>
+</head>
+<script type="text/javascript" src="../echarts.min.js"></script>
+
+<body>
+    <div id="myEcharts"></div>
+</body>
+<script type="text/javascript">
+var myEcharts = echarts.init(document.getElementById('myEcharts'))
+var data = [],
+    datas = [],
+    j = 0,
+    g = 31,
+    categoryData = [],
+    values = [],
+    Volume = [],
+    tempcategoryData = [],
+    tempvalues = [],
+    tempVolume = [];
+/*获取数据*/
+var xhr = null;
+if (XMLHttpRequest) {
+    xhr = new XMLHttpRequest()
+} else {
+    xhr = new ActiveXObject("Microsoft.XMLHTTP")
+}
+xhr.open("get", "./converted.json", true);
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+        if (xhr.status == 200) {
+            data = xhr.responseText;
+            data = eval("(" + data + ")");
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].Ticker == "A") {
+                    /***************得到数据******************/
+                    categoryData.push(data[i].Date.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'));
+                    values[j] = [];
+                    values[j].push(parseFloat(data[i].Open))
+                    values[j].push(parseFloat(data[i].High))
+                    values[j].push(parseFloat(data[i].Low))
+                    values[j].push(parseFloat(data[i].Close))
+                    Volume.push(parseFloat(data[i].Volume))
+                    j++;
+                }
+            }
+            /***************得到最开始的三十个数据******************/
+            for (var d = categoryData.length - 1; d > categoryData.length - 31; d--) {
+                tempcategoryData.push(categoryData[d])
+                tempvalues.push(values[d])
+                tempVolume.push(Volume[d])
+            }
+            datas = {
+                    categoryData: tempcategoryData,
+                    values: tempvalues,
+                    Volume: tempVolume
+                }
+                /***************每次增加的函数****************/
+            function addData() {
+                tempcategoryData.push(categoryData[categoryData.length - g])
+                tempvalues.push(values[categoryData.length - g])
+                tempVolume.push(Volume[categoryData.length - g]) //每执行一次增加一个值
+                tempvalues.shift() //每执行一次去掉第一个值
+                tempVolume.shift()
+                tempcategoryData.shift()
+                datas = {
+                    categoryData: tempcategoryData,
+                    values: tempvalues,
+                    Volume: tempVolume
+                }
+                if (g == categoryData.length) { //达到最大值时从头开始
+                    g = 1
+                }
+                g++
+            }
+            /*********************渲染************************/
+            var myEcharts = echarts.init(document.getElementById('myEcharts'));
+
+            var option = {
+                    backgroundColor: '#eee',
+                    animation: false,
+                    legend: {
+                        bottom: 10,
+                        left: 'center',
+                        data: ['A股票', 'MA5', 'MA10', 'MA20', 'MA30']
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'line'
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            dataZoom: {
+                                yAxisIndex: false
+                            },
+                            brush: {
+                                type: ['lineX', 'clear']
+                            }
+                        }
+                    },
+                    grid: [{
+                        left: '10%',
+                        right: '8%',
+                        height: '50%'
+                    }, {
+                        left: '10%',
+                        right: '8%',
+                        top: '63%',
+                        height: '16%'
+                    }],
+                    xAxis: [{
+                        type: 'category',
+                        data: datas.categoryData,
+                        scale: true,
+                        boundaryGap: false,
+                        axisLine: {
+                            onZero: false
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                        splitNumber: 20,
+                        min: 'dataMin',
+                        max: 'dataMax'
+                    }, {
+                        type: 'category',
+                        gridIndex: 1,
+                        data: datas.categoryData,
+                        scale: true,
+                        boundaryGap: false,
+                        axisLine: {
+                            onZero: false
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: false
+                        },
+                        splitNumber: 20,
+                        min: 'dataMin',
+                        max: 'dataMax'
+                    }],
+                    yAxis: [{
+                        scale: true,
+                        splitArea: {
+                            show: true
+                        }
+                    }, {
+                        scale: true,
+                        gridIndex: 1,
+                        splitNumber: 20,
+                        axisLabel: {
+                            show: false
+                        },
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        splitLine: {
+                            show: false
+                        }
+                    }],
+                    series: [{
+                        name: 'A股票',
+                        type: 'candlestick',
+                        data: datas.values,
+                        itemStyle: {
+                            normal: {
+                                borderColor: null,
+                                borderColor0: null
+                            }
+                        },
+                        tooltip: {
+                            formatter: function(param) {
+                                var param = param[0];
+                                return [
+                                    'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                                    'Open: ' + param.data[0] + '<br/>',
+                                    'Close: ' + param.data[1] + '<br/>',
+                                    'Lowest: ' + param.data[2] + '<br/>',
+                                    'Highest: ' + param.data[3] + '<br/>'
+                                ].join('');
+                            }
+                        }
+                    }, {
+                        name: 'MA5',
+                        type: 'line',
+                        data: calculateMA(5, datas),
+                        smooth: true,
+                        lineStyle: {
+                            normal: {
+                                opacity: 0.5
+                            }
+                        }
+                    }, {
+                        name: 'MA10',
+                        type: 'line',
+                        data: calculateMA(10, datas),
+                        smooth: true,
+                        lineStyle: {
+                            normal: {
+                                opacity: 0.5
+                            }
+                        }
+                    }, {
+                        name: 'MA20',
+                        type: 'line',
+                        data: calculateMA(20, datas),
+                        smooth: true,
+                        lineStyle: {
+                            normal: {
+                                opacity: 0.5
+                            }
+                        }
+                    }, {
+                        name: 'MA30',
+                        type: 'line',
+                        data: calculateMA(30, datas),
+                        smooth: true,
+                        lineStyle: {
+                            normal: {
+                                opacity: 0.5
+                            }
+                        }
+                    }, {
+                        name: 'Volumn',
+                        type: 'bar',
+                        xAxisIndex: 1,
+                        yAxisIndex: 1,
+                        data: datas.Volume
+                    }]
+                }
+                /*用来循环的函数*/
+            setInterval(function() {
+                addData();
+                myEcharts.setOption({
+                    xAxis: {
+                        data: datas.categoryData,
+                    },
+                    series: [{
+                        name: 'A股票',
+                        data: datas.values
+                    }, {
+                        name: 'MA5',
+                        data: calculateMA(5, datas)
+                    }, {
+                        name: 'MA10',
+                        data: calculateMA(10, datas)
+                    }, {
+                        name: 'MA20',
+                        data: calculateMA(20, datas)
+                    }, {
+                        name: 'MA30',
+                        data: calculateMA(30, datas)
+                    }, {
+                        name: 'Volumn',
+                        data: datas.Volume
+                    }]
+                });
+            }, 200);
+            myEcharts.setOption(option);
+        } else {
+            alert("服务器错误")
+        }
+    }
+}
+
+xhr.send(null)
+
+function calculateMA(dayCount, data) {
+    var result = [];
+    for (var i = 0, len = data.values.length; i < len; i++) {
+        if (i < dayCount) {
+            result.push('-');
+            continue;
+        }
+        var sum = 0;
+        for (var j = 0; j < dayCount; j++) {
+            sum += data.values[i - j][1];
+        }
+        result.push(+(sum / dayCount).toFixed(3));
+    }
+    return result;
+}
+</script>
+
+</html>
