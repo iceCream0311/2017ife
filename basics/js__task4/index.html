@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+<style type="text/css">
+.content {
+    padding-top: 50px;
+    width: 600px;
+    margin: 0 auto;
+}
+
+input {
+    line-height: 18px;
+    padding-left: 5px;
+}
+
+.texts {
+    margin-top: 20px;
+}
+
+span {
+    padding: 5px;
+    line-height: 20px;
+    background: red;
+    display: inline-block;
+    margin: 5px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold
+}
+</style>
+
+<body>
+    <div class="content">
+        <input type="text" placeholder="请输入要插入的数" id="inputText">
+        <button id="linput">左侧入</button>
+        <button id="rinput">右侧入</button>
+        <button id="lout">左侧出</button>
+        <button id="rout">右侧出</button>
+        <div class="texts"></div>
+    </div>
+</body>
+<script type="text/javascript">
+function add(addDom) {
+    document.getElementById(addDom).onclick = function() {
+        var inputs = document.getElementById("inputText").value;
+        var spans = document.createElement("span")
+        spans.innerHTML = inputs;
+        var texts = document.querySelector(".texts");
+        if (addDom == "rinput") {
+            texts.appendChild(spans)
+        } else if (addDom == "linput") {
+            var first = texts.firstChild;
+            texts.insertBefore(spans, first)
+        }
+    };
+}
+
+function remove(addDom) {
+    document.getElementById(addDom).onclick = function() {
+        var texts = document.querySelector(".texts");
+        var childList = texts.childNodes;
+        if (!texts.innerHTML) {
+            alert("没有可以删除的元素了");
+            return;
+        }
+        if (addDom == "lout") {
+            var childs = childList[0];
+            var childsText = childs.innerHTML;
+            texts.removeChild(childs);
+            alert("已删除子元素" + childsText);
+
+        } else if (addDom == "rout") {
+            var chils = childList[childList.length - 1];
+            var chilsText = chils.innerHTML;
+            texts.removeChild(chils);
+            alert("已删除子元素" + chilsText);
+        }
+
+    };
+}
+add("linput");
+add("rinput");
+remove("lout");
+remove("rout");
+</script>
+
+</html>
