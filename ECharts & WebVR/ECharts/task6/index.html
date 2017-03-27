@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+    body {
+        background-color: #fff
+    }
+    
+    #echarts {
+        width: 1000px;
+        height: 700px;
+        margin: 0 auto;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="echarts"></div>
+    <script type="text/javascript" src="../echarts.min.js"></script>
+    <script type="text/javascript" src="../dataTool.js"></script>
+    <script type="text/javascript">
+    var myEcharts = echarts.init(document.getElementById('echarts'));
+    $ajax({
+        async: true,
+        method: "get",
+        url: "./data2.gexf",
+        success: function(data) {
+            /*转换一定要引入dataTool.js*/
+            var graph = echarts.dataTool.gexf.parse(data);
+            var categories = [];
+            for (var i = 0; i < 9; i++) {
+                categories[i] = {
+                    name: '类目' + i
+                };
+            }
+            var j = categories.length - 1,
+                g = 0;
+            graph.nodes.forEach(function(node) {
+                node.itemStyle = null;
+                node.value = node.symbolSize;
+                node.symbolSize /= 1.5;
+                node.label = {
+                    normal: {
+                        show: node.symbolSize > 30
+                    }
+                };
+                /*不太会弄gephi所以这个属性没有*/
+                /* node.category = node.attributes.modularity_class;*/
+                if (g < 10) {
+                    node.category = j;
+                    g++;
+                } else {
+                    g = 0;
+                    j--;
+                }
+
+            });
+
+            var option = {
+                title: {
+                    text: '数据集',
+                    top: 'bottom',
+                    left: 'right'
+                },
+                tooltip: {},
+                legend: [{
+                    data: categories.map(function(a) {
+                        return a.name;
+                    })
+                }],
+                animationDuration: 1500,
+                animationEasingUpdate: 'quinticInOut',
+                series: [{
+                    name: 'Les Miserables',
+                    type: 'graph',
+                    layout: 'none',
+                    data: graph.nodes,
+                    links: graph.links,
+                    categories: categories,
+                    roam: true,
+                    label: {
+                        normal: {
+                            position: 'right',
+                            formatter: '{b}'
+                        }
+                    },
+                    lineStyle: {
+                        normal: {
+                            color: 'source',
+                            curveness: 0.3
+                        }
+                    }
+                }]
+            }
+            myEcharts.setOption(option);
+        },
+        error: function() {
+            alert("服务器错误")
+        }
+    });
+
+    /*获取数据*/
+    function $ajax(para) {
+        var xhr = null;
+        if (XMLHttpRequest) {
+            xhr = new XMLHttpRequest()
+        } else {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP")
+        }
+        var async = para.async ? para.async : true;
+        var method = para.method ? para.method : true;
+        xhr.open(method, para.url, async);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    var data = xhr.responseText;
+                    para.success(data);
+                } else {
+                    if (para.error) {
+                        para.error()
+                    }
+                }
+            }
+        }
+        if (para.method == "post") {
+            xhr.send(para.data)
+        } else {
+            xhr.send(null)
+        }
+
+    }
+    </script>
+</body>
+
+</html>
