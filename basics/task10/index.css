@@ -1,0 +1,52 @@
+/*
+* @Author: Administrator
+* @Date:   2016-05-30 14:48:42
+* @Last Modified by:   Administrator
+* @Last Modified time: 2017-03-27 14:49:46
+*/
+
+div[class^="item"] {
+    width: 150px;
+    float: left;
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 10px;
+}
+
+.item1 {
+    height: 120px;
+}
+
+.item2 {
+    height: 100px;
+}
+
+.item3 {
+    height: 40px;
+}
+
+.item4 {
+    height: 200px;
+    margin-right: 0;
+}
+
+body>div {
+    display: flex;
+    justify-content: space-between;
+    /* 平分间距 */
+    align-items: center;
+    /* 居中 */
+}
+
+@media all and (max-width: 640px) {
+    .item4 {
+        order: -1;
+        /*  成为第一个 */
+    }
+    body>div {
+        flex-wrap: wrap;
+        /* 可以换行 */
+        align-items: flex-start;
+        /* 从左到右排列 */
+    }
+}
