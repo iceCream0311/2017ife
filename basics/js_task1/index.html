@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 01</title>
+</head>
+
+<body>
+    <label>请输入北京今天空气质量：
+        <input id="aqi-input" type="text">
+    </label>
+    <button id="button">确认填写</button>
+    <div>您输入的值是：<span id="aqi-display">尚无录入</span></div>
+    <script type="text/javascript">
+    (function() {
+
+
+        /*************************** 绑定点击事件****************************/
+        $("#button").onclick = function() {
+            var domthml = mytrim($("#aqi-input").value);
+
+            if (!!domthml) {
+                $("#aqi-display").innerHTML = domthml
+            } else {
+                $("#aqi-input").value = "";
+                $("#aqi-display").innerHTML = "尚无录入"
+            }
+
+        }
+
+        /************* 封装了一个选择器***********/
+        function $(dom) {
+            return document.querySelector(dom);
+        }
+        /******** 去左空格********/
+        function ltrim(s) {
+            return s.replace(/^\s*/, "").replace(/^[" "|"　"]*/, "");
+        }
+
+        /*********** 去右空格*********/
+        function rtrim(s) {
+            return s.replace(/\s*$/, "").replace(/[" "|"　"]*$/, "");
+        }
+        /************* 去左右空格********/
+        function mytrim(str) {
+            if (!str) {
+                return "";
+            }
+            return rtrim(ltrim(str));
+        }
+
+
+
+    })();
+    </script>
+</body>
+
+</html>
