@@ -58,18 +58,35 @@ xhr.onreadystatechange = function() {
                     j++;
                 }
             }
-            /***************得到最开始的三十个数据******************/
-            for (var d = categoryData.length - 1; d > categoryData.length - 31; d--) {
+            /***************得到最开始的三十个数据,由于折线要从头开始获取五十个并截取30个得到5 10 20的数组******************/
+            for (var d = categoryData.length - 1; d > categoryData.length - 51; d--) {
                 tempcategoryData.push(categoryData[d])
                 tempvalues.push(values[d])
                 tempVolume.push(Volume[d])
             }
+            datas5 = {
+                categoryData: tempcategoryData.slice(15, tempcategoryData.length - 1),
+                values: tempvalues.slice(15, tempcategoryData.length - 1),
+                Volume: tempVolume.slice(15, tempcategoryData.length - 1)
+            }
+            datas10 = {
+                categoryData: tempcategoryData.slice(15, tempcategoryData.length - 1),
+                values: tempvalues.slice(10, tempcategoryData.length - 1),
+                Volume: tempVolume.slice(10, tempcategoryData.length - 1)
+            }
+            datas20 = {
+                categoryData: tempcategoryData.slice(15, tempcategoryData.length - 1),
+                values: tempvalues.slice(0, tempcategoryData.length - 1),
+                Volume: tempVolume.slice(0, tempcategoryData.length - 1)
+            }
             datas = {
-                    categoryData: tempcategoryData,
-                    values: tempvalues,
-                    Volume: tempVolume
-                }
-                /***************每次增加的函数****************/
+                categoryData: tempcategoryData.slice(20, tempcategoryData.length - 1),
+                values: tempvalues.slice(20, tempcategoryData.length - 1),
+                Volume: tempVolume.slice(20, tempcategoryData.length - 1)
+            }
+
+
+            /***************每次增加的函数****************/
             function addData() {
                 tempcategoryData.push(categoryData[categoryData.length - g])
                 tempvalues.push(values[categoryData.length - g])
@@ -77,10 +94,25 @@ xhr.onreadystatechange = function() {
                 tempvalues.shift() //每执行一次去掉第一个值
                 tempVolume.shift()
                 tempcategoryData.shift()
+                datas5 = {
+                    categoryData: tempcategoryData.slice(15, tempcategoryData.length - 1),
+                    values: tempvalues.slice(15, tempcategoryData.length - 1),
+                    Volume: tempVolume.slice(15, tempcategoryData.length - 1)
+                }
+                datas10 = {
+                    categoryData: tempcategoryData.slice(15, tempcategoryData.length - 1),
+                    values: tempvalues.slice(10, tempcategoryData.length - 1),
+                    Volume: tempVolume.slice(10, tempcategoryData.length - 1)
+                }
+                datas20 = {
+                    categoryData: tempcategoryData.slice(15, tempcategoryData.length - 1),
+                    values: tempvalues.slice(0, tempcategoryData.length - 1),
+                    Volume: tempVolume.slice(0, tempcategoryData.length - 1)
+                }
                 datas = {
-                    categoryData: tempcategoryData,
-                    values: tempvalues,
-                    Volume: tempVolume
+                    categoryData: tempcategoryData.slice(20, tempcategoryData.length - 1),
+                    values: tempvalues.slice(20, tempcategoryData.length - 1),
+                    Volume: tempVolume.slice(20, tempcategoryData.length - 1)
                 }
                 if (g == categoryData.length) { //达到最大值时从头开始
                     g = 1
@@ -207,7 +239,8 @@ xhr.onreadystatechange = function() {
                     }, {
                         name: 'MA5',
                         type: 'line',
-                        data: calculateMA(5, datas),
+                        left: "0",
+                        data: calculateMA(5, datas5),
                         smooth: true,
                         lineStyle: {
                             normal: {
@@ -217,7 +250,7 @@ xhr.onreadystatechange = function() {
                     }, {
                         name: 'MA10',
                         type: 'line',
-                        data: calculateMA(10, datas),
+                        data: calculateMA(10, datas10),
                         smooth: true,
                         lineStyle: {
                             normal: {
@@ -227,17 +260,7 @@ xhr.onreadystatechange = function() {
                     }, {
                         name: 'MA20',
                         type: 'line',
-                        data: calculateMA(20, datas),
-                        smooth: true,
-                        lineStyle: {
-                            normal: {
-                                opacity: 0.5
-                            }
-                        }
-                    }, {
-                        name: 'MA30',
-                        type: 'line',
-                        data: calculateMA(30, datas),
+                        data: calculateMA(20, datas20),
                         smooth: true,
                         lineStyle: {
                             normal: {
@@ -249,7 +272,15 @@ xhr.onreadystatechange = function() {
                         type: 'bar',
                         xAxisIndex: 1,
                         yAxisIndex: 1,
-                        data: datas.Volume
+                        data: datas.Volume,
+                        itemStyle: {
+                            normal: {
+                                color: '#7fbe9e'
+                            },
+                            emphasis: {
+                                color: '#140'
+                            }
+                        },
                     }]
                 }
                 /*用来循环的函数*/
@@ -264,16 +295,13 @@ xhr.onreadystatechange = function() {
                         data: datas.values
                     }, {
                         name: 'MA5',
-                        data: calculateMA(5, datas)
+                        data: calculateMA(5, datas5)
                     }, {
                         name: 'MA10',
-                        data: calculateMA(10, datas)
+                        data: calculateMA(10, datas10)
                     }, {
                         name: 'MA20',
-                        data: calculateMA(20, datas)
-                    }, {
-                        name: 'MA30',
-                        data: calculateMA(30, datas)
+                        data: calculateMA(20, datas20)
                     }, {
                         name: 'Volumn',
                         data: datas.Volume
@@ -293,7 +321,7 @@ function calculateMA(dayCount, data) {
     var result = [];
     for (var i = 0, len = data.values.length; i < len; i++) {
         if (i < dayCount) {
-            result.push('-');
+            /* result.push('-');*/
             continue;
         }
         var sum = 0;
