@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+<style type="text/css">
+body {
+    background-color: #fff
+}
+
+#echarts,
+#echarts1 {
+    width: 650px;
+    float: left;
+    height: 500px;
+}
+
+@media screen and (max-width: 1335px) {
+    #echarts,
+    #echarts1 {
+        width: 700px;
+        float: none;
+        margin: 50px auto;
+    }
+}
+</style>
+
+<body>
+    <div id="echarts"></div>
+    <div id="echarts1"></div>
+</body>
+<script type="text/javascript" src="../echarts.min.js"></script>
+<script type="text/javascript">
+var myEcharts = echarts.init(document.getElementById('echarts'));
+var myEcharts1 = echarts.init(document.getElementById('echarts1'));
+$ajax({
+    async: true,
+    method: "get",
+    url: "./data.json",
+    success: function(data) {
+        data = eval("(" + data + ")"); //转换成相应的格式
+        /*获得平均值*/
+        function getevdata(name) {
+            var j = 0,
+                datas = 0;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].areaName == name) {
+                    datas += data[i].value - 0;
+                    j++
+                }
+            }
+            return datas / j;
+        }
+
+        /*获得数据格式为[[2015-4-1,131],[2015-4-1,131]]*/
+        function getdata(name) {
+            var j = 0,
+                datas = [];
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].areaName == name) {
+                    datas[j] = [];
+                    datas[j].push(data[i].recordDate.replace(/\//g, '-'));
+                    datas[j].push(data[i].value);
+                    j++
+                }
+            }
+            return datas;
+        }
+        var datas = getdata("北京"),
+            datas1 = getdata("上海"),
+            datas2 = getdata("重庆");
+        /**********************折线图/柱状******************************/
+        var option = {
+            title: {
+                text: "空气质量折线图一"
+            },
+            tooltip: {
+                trigger: "axis",
+            },
+            xAxis: {
+                data: datas.map(function(item) {
+                    return item[0]
+                })
+            },
+            yAxis: {
+                splitLine: {
+                    show: false
+                }
+            },
+            series: [{
+                name: 'Beijing AQI',
+                type: 'line',
+                data: datas.map(function(item) {
+                    return item[1];
+                }),
+                markLine: {
+                    silent: true,
+                    data: [{
+                        yAxis: 50
+                    }, {
+                        yAxis: 100
+                    }, {
+                        yAxis: 150
+                    }, {
+                        yAxis: 200
+                    }, {
+                        yAxis: 300
+                    }]
+                }
+            }, {
+                name: 'Shanghai AQI',
+                type: 'bar',
+                data: datas1.map(function(item) {
+                    return item[1];
+                })
+            }, {
+                name: 'Chongqing AQI',
+                type: 'bar',
+                data: datas2.map(function(item) {
+                    return item[1];
+                })
+            }]
+        }
+        myEcharts.setOption(option);
+        /**************************散点图/饼状图**************************/
+        var itemStyle = {
+            normal: {
+                opacity: 0.8,
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowOffsetY: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+        };
+        var option1 = {
+            color: [
+                '#dd4444', '#fec42c', '#80F1BE'
+            ],
+            legend: {
+                y: 'top',
+                data: ['北京', '上海', '广州'],
+                textStyle: {
+                    fontSize: 16
+                }
+            },
+            grid: {
+                x: '10%',
+                x2: 150,
+                y: '18%',
+                y2: '10%'
+            },
+            title: {
+                text: "空气质量折线图二"
+            },
+            tooltip: {},
+            xAxis: {
+                name: "日期",
+                data: datas.map(function(item) {
+                    return item[0]
+                })
+            },
+            yAxis: {
+                type: "value",
+                name: 'AQI指数',
+                nameLocation: 'end',
+                nameGap: 20,
+                splitLine: {
+                    show: false
+                }
+            },
+            series: [{
+                name: '北京 AQI',
+                type: 'scatter',
+                itemStyle: itemStyle,
+                data: datas.map(function(item) {
+                    return item[1]
+                }),
+                symbolSize: function(data) {
+                    return data / 6;
+                }
+            }, {
+                name: '上海 AQI',
+                type: 'scatter',
+                itemStyle: itemStyle,
+                data: datas1.map(function(item) {
+                    return item[1]
+                }),
+                symbolSize: function(data) {
+                    return data / 6;
+                }
+            }, {
+                name: '重庆 AQI',
+                type: 'scatter',
+                itemStyle: itemStyle,
+                data: datas2.map(function(item) {
+                    return item[1]
+                }),
+                symbolSize: function(data) {
+                    return data / 6;
+                }
+            }, {
+                name: 'AQI 平均指数',
+                type: 'pie',
+                radius: '20%',
+                center: ['80%', '15%'],
+                data: [{
+                    value: getevdata("北京"),
+                    name: '北京 AQI'
+                }, {
+                    value: getevdata("上海"),
+                    name: '上海 AQI'
+                }, {
+                    value: getevdata("重庆"),
+                    name: '重庆 AQI'
+                }, ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        }
+        myEcharts1.setOption(option1);
+    },
+    error: function() {
+        alert("服务器错误")
+    }
+});
+
+
+/*获取数据*/
+function $ajax(para) {
+    var xhr = null;
+    if (XMLHttpRequest) {
+        xhr = new XMLHttpRequest()
+    } else {
+        xhr = new ActiveXObject("Microsoft.XMLHTTP")
+    }
+    var async = para.async ? para.async : true;
+    var method = para.method ? para.method : true;
+    xhr.open(method, para.url, async);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                var data = xhr.responseText;
+                para.success(data);
+            } else {
+                if (para.error) {
+                    para.error()
+                }
+            }
+        }
+    }
+    if (para.method == "post") {
+        xhr.send(para.data)
+    } else {
+        xhr.send(null)
+    }
+
+}
+</script>
+
+</html>
