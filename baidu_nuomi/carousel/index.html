@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+
+<body>
+<div class="banner">
+  <audio src="./like.mp3" autoplay controls loop></audio>
+  <div class="scene">
+    <ul>
+      <li><img src="images/index1.jpg"></li>
+      <li><img src="images/index2.jpg"></li>
+      <li><img src="images/index3.jpg"></li>
+      <li><img src="images/index4.jpg"></li>
+      <li><img src="images/index5.jpg"></li>
+      <li><img src="images/index6.jpg"></li>
+    </ul>
+  </div>
+</div>
+</body>
+<!-- 下面代码主要为实现花瓣飘落的效果 -->
+<script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="snowfall.jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+$(document).snowfall('clear');
+$(document).snowfall({
+    image: "./images/huaban.png",
+    flakeCount: 80,
+    minSize: 2,
+    maxSize: 15
+});
+})
+</script>
+</html>

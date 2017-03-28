@@ -1,0 +1,47 @@
+/* 由于元素不多就不写多行的清除样式的css */
+*{padding:0;margin:0}
+body{background-image:url(images/bg.jpg);background-size: cover;background-repeat:no-repeat;
+ /*  去掉使用snowfall花瓣掉落时可能超出宽度造成闪屏问题 */
+  overflow: hidden;
+}
+audio{display: none;}
+/* banner居中靠下 */
+.banner{width: 240px;height: 204px;position: absolute;bottom: 110px;margin: auto;left: 0;right: 0;
+  /*视距*/
+ perspective: 1000px; }
+.scene{width: 240px;height: 240px;float: left;
+  /* 子元素为3d模式 */
+  transform-style:preserve-3D;
+  /* 设置旋转中心 */
+  transform-origin:50% ;
+  -webkit-animation: slide 18s linear infinite;
+    animation: slide 18s linear infinite;
+}
+ul li{list-style:none;position: absolute;width: 240px;height: 240px; box-sizing: border-box;border: 5px solid #FE98D9}
+ul li img{width: 100%;height: 100%;}
+ul li:nth-child(1) { transform: rotateY(0deg) translateZ(260px);}
+ul li:nth-child(2) { transform: rotateY(60deg) translateZ(260px);}
+ul li:nth-child(3) { transform: rotateY(120deg) translateZ(260px);}
+ul li:nth-child(4) { transform: rotateY(180deg) translateZ(260px);}
+ul li:nth-child(5) { transform: rotateY(240deg) translateZ(260px);}
+ul li:nth-child(6) { transform: rotateY(300deg) translateZ(260px);}
+/* 鼠标经过停止动画，图片变大1.2倍并且边框变色 */
+.scene:hover {-webkit-animation-play-state: paused; animation-play-state: paused;}
+.scene li:hover img {transform: scale(1.2);border: 5px solid rgba(255, 255, 255, 0.5)}
+/*CSS3动画开始,动画未开始前有点怪怪的一转动就很明显的3d效果*/
+@-webkit-keyframes slide {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
+@keyframes slide {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
