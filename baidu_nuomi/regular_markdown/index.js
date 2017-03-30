@@ -13,7 +13,8 @@ var olRE = /^\d(\.|\))+\s/;
 /*无序列表[* -]*/
 var ulRE = /^[\*\+-]\s/
     /*引用*/
-var quoteRE = /\`[\w\W\d\D]+\`/
+    /*var quoteRE = /\`[\w\W\d\D]+\`/*/
+var quoteRE = /^[\>]+\s/
 
 /********************正则 end************************/
 
@@ -30,6 +31,8 @@ $("textarea").oninput = function() {
         /*右边展示内容*/
     var contenthml = ""
     var temphtmlArr = htmlArr,
+        ols = 0, //ol表示
+        uls = 0, //ul表示
         arr = []; //赋值给另一个中间数组防止改变原数组
     for (let i = 0; i < temphtmlArr.length; i++) {
         if (temphtmlArr[i]) {
@@ -43,24 +46,42 @@ $("textarea").oninput = function() {
                     /*代码段内容部分*/
                     contenthml += "<pre><code>";
                     for (let j = 0; j < arr.length; j++) {
-                        contenthml += arr[i] + '<br>';
+                        contenthml += arr[j] + '<br>';
                     }
                     contenthml += "</code></pre>" //结束标签
                 } else {
                     contenthml += '<p>' + temphtmlArr[i] + '</p>'
                 }
-
             } else {
                 /****************标题内容*********************/
-                if (titleRE1.test(temphtmlArr[i])) { contenthml += '<h1>' + temphtmlArr[i].replace(titleRE1, "") + '</h1>' }
-                    else if (titleRE2.test(temphtmlArr[i])) { contenthml += '<h2>' + temphtmlArr[i].replace(titleRE2, "") + '</h2>' }
-                    else if (titleRE3.test(temphtmlArr[i])) { contenthml += '<h3>' + temphtmlArr[i].replace(titleRE3, "") + '</h3>' }
-                    else if (titleRE4.test(temphtmlArr[i])) { contenthml += '<h4>' + temphtmlArr[i].replace(titleRE4, "") + '</h4>' }
-                    else if (titleRE5.test(temphtmlArr[i])) { contenthml += '<h5>' + temphtmlArr[i].replace(titleRE5, "") + '</h5>' }
-                    else if (titleRE6.test(temphtmlArr[i])) { contenthml += '<h6>' + temphtmlArr[i].replace(titleRE6, "") + '</h6>' }
-
-                /*引用*/
-            function quote(){
+                if (titleRE1.test(temphtmlArr[i])) { contenthml += '<h1>' + temphtmlArr[i].replace(titleRE1, "") + '</h1>' } else if (titleRE2.test(temphtmlArr[i])) { contenthml += '<h2>' + temphtmlArr[i].replace(titleRE2, "") + '</h2>' } else if (titleRE3.test(temphtmlArr[i])) {
+                    contenthml += '<h3>' + temphtmlArr[i].replace(titleRE3, "") + '</h3>'
+                } else if (titleRE4.test(temphtmlArr[i])) {
+                    contenthml += '<h4>' + temphtmlArr[i].replace(titleRE4, "") + '</h4>'
+                } else if (titleRE5.test(temphtmlArr[i])) {
+                    contenthml += '<h5>' + temphtmlArr[i].replace(titleRE5, "") + '</h5>'
+                } else if (titleRE6.test(temphtmlArr[i])) {
+                    contenthml += '<h6>' + temphtmlArr[i].replace(titleRE6, "") + '</h6>'
+                } else if (quoteRE.test(temphtmlArr[i])) {
+                    /*****************块引用******************/
+                    contenthml += '<blockquote>' + temphtmlArr[i].replace(quoteRE, "") + '</blockquote>'
+                } else if (olRE.test(temphtmlArr[i])) {
+                    /********************有序列表****************/
+                    if (ols == 0) {
+                        contenthml += '<ol><li>' + temphtmlArr[i].replace(olRE, "")
+                    } else {
+                        contenthml += '</li><li>' + temphtmlArr[i].replace(olRE, "")
+                    }
+                    ols++
+                } else if (ulRE.test(temphtmlArr[i])) {
+                    if (uls == 0) {
+                        contenthml += '<ol><li>' + temphtmlArr[i].replace(olRE, "")
+                    } else {
+                        contenthml += '</li><li>' + temphtmlArr[i].replace(olRE, "")
+                    }
+                    uls++
+                } else { contenthml += '<p>' + temphtmlArr[i] + '</p>' }
+                /* function quote(){
                 if (quoteRE.test(temphtmlArr[i])) {
                    var  a=temphtmlArr[i].match(quoteRE);
                    for (let i = 0; i < a.length; i++) {
@@ -69,7 +90,7 @@ $("textarea").oninput = function() {
 
                 }
             }
-        quote()
+        quote()*/
 
 
             }
