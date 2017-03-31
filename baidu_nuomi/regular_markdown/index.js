@@ -20,7 +20,11 @@ var quoteRE = /^[\>]+\s/
 
 /********************textarea 输入事件************************/
 $("textarea").oninput = function() {
-    /*以行分割textarea内容*/
+changehtml();
+}
+changehtml();
+function changehtml(){
+      /*以行分割textarea内容*/
     var htmlArr = $("textarea").value.split("\n");
     /*侧边栏序列号*/
     var rowhtml = "";
@@ -38,20 +42,25 @@ $("textarea").oninput = function() {
         if (temphtmlArr[i]) {
             /****************代码段内容*********************/
             if (codeRE.test(temphtmlArr[i])) {
-                arr = temphtmlArr.slice(i, temphtmlArr.length); //代码段以后的内容
+                arr = temphtmlArr.slice(i + 1, temphtmlArr.length); //代码段以后的内容
                 if (arr.indexOf("```") != -1) {
                     temphtmlArr = arr.slice(arr.indexOf("```"), arr.length) //除了代码段以后的内容
                     i = 0; //初始化循环除了代码段以后的内容
                     arr = arr.slice(0, arr.indexOf("```")); //代码段内容
                     /*代码段内容部分*/
-                    contenthml += "<pre><code>";
+                    var tempcontenthml = "";
                     for (let j = 0; j < arr.length; j++) {
-                        contenthml += arr[j] + '<br>';
+                        name.replace(/"([^"]*)"/g, "'$1'")
+                        let arrtemp = arr[j].replace(/\</, "&lt") //使用中间变量获取转换标签后的文字
+                        arrtemp = arrtemp.replace(/\>/, "&gt")
+                        if (arrtemp.indexOf("//") != -1) {
+                            arrtemp = arrtemp.replace(/\/\//, '<span class="code-quote">//') //遇见两个斜杠的时候
+                            arrtemp += '</span>'
+                        }
+                        tempcontenthml += arrtemp.replace(/\//, "&frasl;") + '</br>';
                     }
-                    contenthml += "</code></pre>" //结束标签
-                } else {
-                    contenthml += '<p>' + temphtmlArr[i] + '</p>'
-                }
+                    contenthml += "<pre><code>" + tempcontenthml + "</code></pre>"; //结束标签
+                } else { contenthml += '<p>' + temphtmlArr[i] + '</p>' }
             } else {
                 /****************标题内容*********************/
                 if (titleRE1.test(temphtmlArr[i])) { contenthml += '<h1>' + temphtmlArr[i].replace(titleRE1, "") + '</h1>' } else if (titleRE2.test(temphtmlArr[i])) { contenthml += '<h2>' + temphtmlArr[i].replace(titleRE2, "") + '</h2>' } else if (titleRE3.test(temphtmlArr[i])) {
@@ -74,33 +83,21 @@ $("textarea").oninput = function() {
                     }
                     ols++
                 } else if (ulRE.test(temphtmlArr[i])) {
+                    /********************无序列表****************/
                     if (uls == 0) {
-                        contenthml += '<ol><li>' + temphtmlArr[i].replace(olRE, "")
+                        contenthml += '<ul><li>' + temphtmlArr[i].replace(olRE, "")
                     } else {
                         contenthml += '</li><li>' + temphtmlArr[i].replace(olRE, "")
                     }
                     uls++
                 } else { contenthml += '<p>' + temphtmlArr[i] + '</p>' }
-                /* function quote(){
-                if (quoteRE.test(temphtmlArr[i])) {
-                   var  a=temphtmlArr[i].match(quoteRE);
-                   for (let i = 0; i < a.length; i++) {
-                       contenthml += '<code>' + a[i].replace(/\`/g,"") + '</code>'
-                   }
-
-                }
-            }
-        quote()*/
 
 
             }
         }
     }
     $(".content").innerHTML = contenthml;
-
-
 }
-
 
 
 /*获取dom*/
