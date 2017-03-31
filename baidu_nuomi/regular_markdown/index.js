@@ -1,20 +1,21 @@
 /*******************正则********************/
 /*代码块[```]或者[``` ]*/
-var codeRE = /^\`{3}\s{0,}$/;
+var codeRE = /\`{3}\s{0,}$/;
+var titleRE1 = /^\s{0,}\#\s/;
 /*标题*/
-var titleRE1 = /^\#\s/;
-var titleRE2 = /^\#{2}\s/;
-var titleRE3 = /^\#{3}\s/;
-var titleRE4 = /^\#{4}\s/;
-var titleRE5 = /^\#{5}\s/;
-var titleRE6 = /^\#{6}\s/;
+/*var titleRE1 = /^\#\s/;*/
+var titleRE2 = /^\s{0,}\#{2}\s/;
+var titleRE3 = /^\s{0,}\#{3}\s/;
+var titleRE4 = /^\s{0,}\#{4}\s/;
+var titleRE5 = /^\s{0,}\#{5}\s/;
+var titleRE6 = /^\s{0,}\#{6}\s/;
 /*有序列表[1. 1)]*/
-var olRE = /^\d(\.|\))+\s/;
+var olRE = /^\s{0,}\d(\.|\))+\s/;
 /*无序列表[* -]*/
-var ulRE = /^[\*\+-]\s/
+var ulRE = /^\s{0,}[\*\+-]\s/
     /*引用*/
     /*var quoteRE = /\`[\w\W\d\D]+\`/*/
-var quoteRE = /^[\>]+\s/
+var quoteRE = /^\s{0,}[\>]+\s/
 
 /********************正则 end************************/
 
