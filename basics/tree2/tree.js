@@ -1,185 +1,169 @@
- var dom = document.querySelector("#tree")
- var ss = [],
-     timer = null,
-     isFirst = false;
- /* 深度*/
- function traverseDF(doms) {
-     for (var i = 0, length = doms.children.length; i < length; i++) {
-         if (doms.children[i].tagName == "DIV") {
-             traverseDF(doms.children[i]);
-             ss.push(doms.children[i])
-         }
-
-         if (isFirst == false) {
-             setTimeout(function() {
-                 ss.push(doms)
-             }, 0)
-             isFirst = true;
-         }
-     }
+ function Node(data) {
+     this.data = data;
+     this.parent = null;
+     this.children = [];
  }
 
- /*广度*/
- var z = 0
-
- function traverseBF(node) {;
-     if (node) {
-         ss.push(node);
-         if (z > 0) {
-             traverseBF(node.nextElementSibling);
-         }
-         node = ss[z++];
-         if (node.firstElementChild) {
-
-             if (node.firstElementChild.tagName == "SPAN") {
-                 traverseBF(node.firstElementChild.nextElementSibling);
-             } else {
-                 traverseBF(node.firstElementChild);
-             }
-         }
-     }
+ function Tree(data) {
+     var node = new Node(data);
+     this._root = node;
  }
+ var tree = new Tree('CEO');
 
- function changeColor(arr) {
-     var i = 0;
-     timer = setInterval(function() {
-         if (i <= arr.length) {
-             if (i < arr.length) {
-                 arr[i].setAttribute("class", "blue")
-             }
-             if (i > 0) {
-                 arr[i - 1].setAttribute("class", "")
-             }
-         } else {
-             clearInterval(timer)
+ /*{data: 'CEO', parent: null, children: []}*/
+ tree._root;
+ Tree.prototype.traverseDF = function(callback) {
+
+     // this is a recurse and immediately-invoking function
+     (function recurse(currentNode) {
+         // step 2
+         for (var i = 0, length = currentNode.children.length; i < length; i++) {
+             // step 3
+             recurse(currentNode.children[i]);
          }
-         i++;
-     }, 500)
- }
 
- function resetColor() {
-     if (ss.length) {
-         isFirst = false;
-         clearInterval(timer);
-         for (var i = 0; i < ss.length; i++) {
-             ss[i].setAttribute("class", "")
-         }
-         ss = [];
-         z = 0;
-     } else {
-         document.querySelectorAll("div").forEach(function(item) {
-             item.setAttribute("class", "")
-         })
-     }
+         // step 4
+         callback(currentNode);
 
- }
+         // step 1
+     })(this._root);
 
- function searchText(arr, str) {
-     var flag = 0;
-     if (str == "") {
-         alert("请输入搜索内容")
-         return false;
-     }
-     var i = 0;
-     timer = setInterval(function() {
-         if (i < arr.length) {
-             arr[i].setAttribute("class", "blue");
-             if (arr[i].children) {
-                 for (var j = 0; j < arr[i].children.length; j++) {
-                     if (arr[i].children[j].tagName = "SPAN") {
+ };
 
-                         if (arr[i].children[j].innerHTML == str) {
-                             arr[i].setAttribute("class", "red");
-                             flag++;
-                             // clearInterval(timer)
+ // 数据
+ var partent = document.querySelector("#tree");
+ var j = 0,
+     childs = 0;
+ console.log(partent.children)
+
+
+
+ // while(partent.childs.length){
+
+ // }
+ var tree = new Tree(partent);
+ var j = 0,
+     z = 0,
+     a = 0,
+     b = 0,
+     c = 0,
+     d = 0;
+ for (var i = 0; i < partent.children.length; i++) {
+     if (partent.children[i].tagName == "DIV") {
+         tree._root.children.push(new Node(partent.children[i]));
+         tree._root.children[j].parent = tree;
+         for (var g = 0; g < partent.children[i].children.length; g++) {
+             if (partent.children[i].children[g].tagName == "DIV") {
+                 tree._root.children[j].children.push(new Node(partent.children[i].children[g]));
+                 tree._root.children[j].children[z].parent = tree._root.children[z];
+                 for (var a = 0; a < partent.children[i].children[g].children.length; a++) {
+                     if (partent.children[i].children[g].children[a].tagName == "DIV") {
+                         tree._root.children[j].children[z].children.push(new Node(partent.children[i].children[g].children[a]));
+                         if (tree._root.children[z]) {
+                             tree._root.children[j].children[z].children[b].parent = tree._root.children[z].children[b];
+                             for (var c = 0; c < partent.children[i].children[g].children[a].children.length; c++) {
+                                 if (partent.children[i].children[g].children[a].children[c].tagName == "DIV") {
+                                     tree._root.children[j].children[z].children[b].children.push(new Node(partent.children[i].children[g].children[a].children[c]));
+                                     if (tree._root.children[z].children[b]) {
+                                         tree._root.children[j].children[z].children[b].children[d].parent = tree._root.children[z].children[d];
+                                     }
+                                     d++
+                                 }
+
+                             }
                          }
+                         d = 0;
+                         b++
                      }
                  }
+                 b = 0;
+                 z++;
              }
-             if (i > 0) {
-                 if (!(arr[i - 1].getAttribute("class") == "red")) {
-                     arr[i - 1].setAttribute("class", "")
-                 }
-
-             }
-         } else {
-             if (!(arr[i - 1].getAttribute("class") == "red")) {
-                 arr[arr.length - 1].setAttribute("class", "")
-             }
-             if (!flag) {
-                 alert("没有找到您想要的内容")
-             } else {
-                 alert("找到了" + flag + "条")
-             }
-
-             clearInterval(timer)
          }
-         i++;
-     }, 500)
-
+         z = 0;
+         j++;
+     }
  }
+
+
+ // console.log(tree)
+
+var timer=null, ss=[],dd=[];
+
+
  /*深度遍历*/
- document.getElementById("deep").onclick = function() {
-         resetColor()
-         traverseDF(dom)
-         changeColor(ss)
+ tree.traverseDF(function(node) {
+     ss.push(node.data)
+ });
 
-     }
-     /*广度遍历*/
- document.getElementById("qian").onclick = function() {
-         resetColor()
-         traverseBF(dom)
-         changeColor(ss)
+/*改变颜色*/
+    function changeColor(ss){
+      var i=0;
+      timer=setInterval(function(){
+         if (i<ss.length) {
+          ss[i].setAttribute("class","blue")
+          if (i>=1) {
+            ss[i-1].setAttribute("class","")
+          }
 
-     }
-     /*内容搜索*/
- document.getElementById("searchbtn").onclick = function() {
-     var inpt = document.getElementById("search").value;
-     resetColor(ss)
-     traverseDF(dom)
-     searchText(ss, inpt)
+        }
+        else{
+          clearInterval(timer);
 
- }
+           ss[i-1].setAttribute("class","")
 
- var chekDom = "";
- /* 选中元素*/
- function clickDom() {
-     document.querySelectorAll("div").forEach(function(item) {
-         item.onclick = function(e) {
-             resetColor()
-                 // 阻止冒泡
-             window.event ? window.event.cancelBubble = true : e.stopPropagation();
-             this.setAttribute("class", "yellow");
-             chekDom = this;
+        }
+        i++;
+
+      },500)
+    }
+    /*初始化*/
+    function restColor(ss){
+      clearInterval(timer); /*清除定时器*/
+      console.log(ss)
+      for (var j = 0; j < ss.length; j++) {
+        ss[j].setAttribute("class","")
+      }
+
+    }
+
+
+
+
+ /*广度*/
+ Tree.prototype.traverseBF = function(callback) {
+     var queue = new Queue();
+     queue.enqueue(this._root);/*方法在test.js*/
+     currentTree = queue.dequeue();
+     while (currentTree) {
+         for (var i = 0, length = currentTree.children.length; i < length; i++) {
+             queue.enqueue(currentTree.children[i]);
          }
-     })
- }
- clickDom();
- window.ondblclick = function(e) {
-     window.event ? window.event.cancelBubble = true : e.stopPropagation();
-     resetColor()
- }
- document.getElementById("addDom").onclick = function() {
-     var content = document.getElementById("addDomText").value;
-
-     if (content == "") {
-         alert("请输入想要添加的内容")
-     } else if (chekDom == "") {
-         alert("请选择要添加的位置")
-     } else {
-         var chils = document.createElement("div");
-         var spans = document.createElement("span");
-         spans.innerHTML = content;
-         chils.appendChild(spans)
-         chekDom.appendChild(chils)
-         clickDom();
+         callback(currentTree);
+         currentTree = queue.dequeue();
      }
- }
- document.getElementById("reDom").onclick = function() {
-     if (chekDom == "") {
-         alert("请选择要删除的元素")
-     } else {
-         chekDom.remove();
+ };
+ tree.traverseBF(function(node) {
+     dd.push(node.data)
+ });
+ Tree.prototype.contains = function(callback, traversal) {
+     traversal.call(this, callback);
+ };
+ /*tree is an example of a root node*/
+ tree.contains(function(node) {
+     if (node.data === 'two') {
+         console.log(node); //输出该节点的子元素
      }
+ }, tree.traverseBF);
 
- }
+document.getElementById("deep").onclick=function(){
+   restColor(ss)
+  changeColor(ss)
+
+}
+document.getElementById("qian").onclick=function(){
+   restColor(dd)
+  changeColor(dd)
+
+}
+

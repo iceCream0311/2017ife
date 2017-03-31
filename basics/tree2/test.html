@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <script type="text/javascript" src="test.js"></script>
+    <script type="text/javascript">
+    function Node(data) {
+        this.data = data;
+        this.parent = null;
+        this.children = [];
+    }
+
+    function Tree(data) {
+        var node = new Node(data);
+        this._root = node;
+    }
+    var tree = new Tree('CEO');
+
+    /*{data: 'CEO', parent: null, children: []}*/
+    tree._root;
+    Tree.prototype.traverseDF = function(callback) {
+
+        // this is a recurse and immediately-invoking function
+        (function recurse(currentNode) {
+            // step 2
+            for (var i = 0, length = currentNode.children.length; i < length; i++) {
+                // step 3
+                recurse(currentNode.children[i]);
+            }
+
+            // step 4
+            callback(currentNode);
+
+            // step 1
+        })(this._root);
+
+    };
+    var tree = new Tree('one');
+
+    tree._root.children.push(new Node('two'));
+    tree._root.children[0].parent = tree;
+
+    tree._root.children.push(new Node('three'));
+    tree._root.children[1].parent = tree;
+
+    tree._root.children.push(new Node('four'));
+    tree._root.children[2].parent = tree;
+
+    tree._root.children[0].children.push(new Node('five'));
+    tree._root.children[0].children[0].parent = tree._root.children[0];
+
+    tree._root.children[0].children.push(new Node('six'));
+    tree._root.children[0].children[1].parent = tree._root.children[0];
+
+    tree._root.children[2].children.push(new Node('seven'));
+    tree._root.children[2].children[0].parent = tree._root.children[2];
+    /*深度遍历*/
+    tree.traverseDF(function(node) {
+        // console.log(node.data)
+    });
+
+
+
+
+    /*广度*/
+    Tree.prototype.traverseBF = function(callback) {
+        var queue = new Queue();
+
+        queue.enqueue(this._root);
+
+        currentTree = queue.dequeue();
+
+        while (currentTree) {
+            for (var i = 0, length = currentTree.children.length; i < length; i++) {
+                queue.enqueue(currentTree.children[i]);
+            }
+
+            callback(currentTree);
+            currentTree = queue.dequeue();
+        }
+    };
+    tree.traverseBF(function(node) {
+        // console.log(node.data)
+    });
+    Tree.prototype.contains = function(callback, traversal) {
+        traversal.call(this, callback);
+    };
+    /*tree is an example of a root node*/
+    tree.contains(function(node) {
+        if (node.data === 'two') {
+            console.log(node); //输出该节点的子元素
+        }
+    }, tree.traverseBF);
+    </script>
+</body>
+
+</html>
