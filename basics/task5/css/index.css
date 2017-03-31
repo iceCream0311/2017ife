@@ -1,0 +1,60 @@
+/* ---------------》初始化《---------------- */
+* {margin: 0;padding: 0}
+body {font: 400 16px "microsoftYaHei"; color: #333; background-color: #DEDEDE;}
+.container {margin-left: 20px;margin-right: 20px}
+ul li {list-style: none}
+textarea {resize: none;padding-top: 5px;padding-left: 5px;}
+input,textarea,elect {outline: none;}
+input[placeholder] { font-size: 12px; padding-left: 5px;}
+.clearfix { clear: both;}
+/* ---------------》头部《---------------- */
+nav,footer {width: 100%; height: 60px;background-color: #333;line-height: 60px;color: #fff}
+nav .logo {float: left;color: #fff;font: 600 20px "microsoftYaHei";  line-height: 60px;}
+nav ul { float: right;color:#000}
+nav ul li { float: left;  line-height: 60px;list-style: disc; margin-left: 26px;}
+nav ul a { line-height: 60px;  display: block; color: #fff; text-decoration: none;}
+/* ---------------》正文《---------------- */
+main {padding-right: 380px;osition: relative;}
+article {  padding-top: 20px;background-color: #fff; margin: 20px; box-shadow: 5px 5px 5px #555;}
+article h1,h2,h4 {line-height: 44px; color: #222;}
+h2 {color: #666;}
+h4 {color: #888;}
+article h1 { font-size: 20px;}
+article h2 {font-size: 14px;}
+article h4 { font-size: 12px}
+a {color: #666;text-decoration: none;}
+pre a { color: blue;text-decoration: underline;}
+/* ---------------》正文2《---------------- */
+.pictures ul li {width: 120px; height: 130px; border: 1px solid #ccc;  margin: 15px; padding: 10px; text-align: center;float: left;}
+.pictures ul li p {line-height: 45px;}
+.pictures a { display: block; width: 100%; height: 100%;}
+.pictures img { width: 100px;height: 80px;}
+/* ---------------》正文3《---------------- */
+.tableContent .container { padding-bottom: 20px;}
+.tableContent ol { padding: 0 0 20px 40px; font: 700 14px "simsun";}
+.tableContent table {width: 100%;text-align: center;  margin: 0;}
+.tableContent table {border-collapse: collapse;}
+.tableContent table th,.tableContent table td {eight: 25px;}
+.tableContent table a { text-decoration: underline; color: blue;}
+.tableContent table a:hover {  color: red;}
+.tableContent table thead {background-color: #333;olor: #FFF;}
+.tableContent table tfoot {background-color: #CCC; color: #000;}
+/* ---------------》侧边栏《---------------- */
+aside {width: 360px; box-shadow: 5px 5px 5px #555;  position: absolute;right: 20px; background-color: #fff;top: 80px;}
+aside h2 { font-size: 14px; line-height: 34px; padding-top: 20px;  position: relative;left: 5px; color: #000;}
+aside h2:before {content: "|";font: 900 34px "simsun";font-weight: bold;position: absolute;left: -18px;color: #666;}
+aside form {font-size: 12px;color: #000;padding-bottom: 20px;padding-top: 20px;}
+aside form>div {display: block;height: 34px;width: 100%;text-align: center;font-weight: 500;line-height: 26px;padding-top: 5px;}
+aside form label {display: block;float: left;height: 30px;width: 98px;margin-right: 10px;text-align: right;}
+aside form input {display: inline-block;position: relative;float: left;height: 22px;width: 180px;padding: 2px;border: 1px solid #ddd;font-size: 14px;float: left;}
+aside form p {padding-left: 112px;text-align: left;line-height: 34px;color: #777;}
+aside form button {background-color: #3355D0;height: 34px;width: 100%;border-radius: 10px;color:#fff}
+aside .sex input { width: 15px;}
+aside .sex label:nth-of-type(2),aside .sex label:nth-of-type(3) {width: 36px;}
+aside .citySelector select {display: block;width: 62px;height: 24px;float: left;}
+aside .hobby {vertical-align: middle;}
+aside .hobby input {width: 15px;line-height: 24px;}
+aside .hobby label:nth-of-type(2),
+aside .hobby label:nth-of-type(3),
+aside .hobby label:nth-of-type(4) {float: left;  width: 42px;}
+aside .selfDescription {height: auto;}
