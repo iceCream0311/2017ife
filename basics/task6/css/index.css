@@ -1,0 +1,75 @@
+/* ---------------》初始化《---------------- */
+* {margin: 0; padding: 0;}
+ul li {list-style: none;}
+.clearfix:before,
+.clearfix:after {content: "";display: table;}
+.clearfix:after { clear: both;}
+.clearfix {
+    *zoom: 1;
+}
+/* ---------------》版心《---------------- */
+.w { width: 980px;padding-left: 44px;padding-right: 44px; height: auto; margin: 0 auto;}
+/* ---------------》导航《---------------- */
+.nav {width: 100%;height: 61px;border-bottom: 2px solid #938e8c;font-size: 12px;font-family: "KaiTi";}
+.nav span:nth-child(1) {display: block;box-sizing: border-box;padding-top: 40px;padding-left: 5px;float: left;height: 100%;width: 110px;background-color: #d45d5c;color: #fff;}
+.nav span:nth-child(2) {display: block;color: #d45d5c;float: right;padding-top: 40px;padding-right: 5px;}
+/* ---------------》主题《---------------- */
+.main { padding-top: 30px; font-family: "MicrosoftYahei";}
+.main .mainImage {float: left;position: relative;}
+.main .mainImage:before,
+.main .mainImage:after { content: ""; width: 191px; height: 301px; position: absolute; top: 0;}
+.main .mainImage:before {background-color: rgba(66, 140, 89, 0.5);left: 0;}
+.main .mainImage:after { background-color: rgba(204, 118, 128, 0.5); right: 0;}
+.main .about {width: 203px;border-top: 2px solid #cc8091;float: right;}
+.main .about>p:nth-child(1),
+.main .about>p:nth-child(2) {display: block;font: 21px/40px "MicrosoftYahei";text-decoration: underline;color: black;vertical-align: sub;}
+.main .about>p b {font: 24px/38px "MicrosoftYahei";}
+.main .about>p:nth-child(3) {font: 12px/17px "SimHei";text-decoration: underline; color: #676767;}
+.main .about>p:nth-child(4) {font: italic 116px "MicrosoftYahei";color: #75b86b;}
+.main .about>div {font: 55px "MicrosoftYahei";color: #cc8091;height: 53px;}
+.main .about>div>div { float: left; width: 50%; height: 100%; position: relative}
+.main .about div .tp {font-size: 21px;position: absolute;bottom: 12px;}
+.main .about div .bt {font-size: 12px;position: absolute;bottom: 0;color: #d0d0d1;font-family: "MicrosoftYahei";font-size: 12px;}
+/* ---------------》新闻《---------------- */
+
+.news {padding-top: 40px;padding-bottom: 70px;width: 641px;}
+.news div {width: 30%;padding-right: 5%;float: left;color: rgba(0, 0, 0, 0.7);font-size: 12px;line-height: 16px;font-family: "MicrosoftYahei";}
+.news .rg { padding-right: 0;}
+.news .lf {font-family: "simsun";}
+.news h3 {font-size: 16px;text-decoration: underline;font-weight: bold;line-height: 30px;}
+.news .lf h3 { color: #428c59;}
+.news .ct h3 { color: #d2994f;}
+.news .rg h3 { color: #cc7680;}
+.news .rg ul { padding-top: 30px;}
+.news .rg ul span {color: #cd4a48;font-style: italic;}
+/* ---------------》详情《---------------- */
+.detailsPage .article { width: 415px; float: left; font-family: "simsun"; font-size: 12px; color: #767777; line-height: 16px;}
+.detailsPage .articleTitle {font: 600 42px/42px "SimHei";color: #11456b;}
+.detailsPage .article span {font-size: 72px;color: #f5e327;}
+.detailsPage .article p span {font-style: italic;}
+.detailsPage .articleTitle h2 {font-size: 33px;line-height: 52px;padding-bottom: 5px;}
+.detailsPage .articleTitle {border-bottom: 2px solid #11456b;}
+.detailsPage .article img {padding: 20px 0 12px 13px;  float: right;}
+.detailsPage .articleBody>span { display: inline-block; line-height: 72px; float: left; vertical-align: bottom;}
+.detailsPage .articleBody { padding-top: 23px;}
+.detailsPage .details {float: right;}
+.detailsPage .details .detailsImage { position: relative;}
+.details .detailsImage div {box-sizing: border-box;position: absolute;bottom: 3px;width: 100%;height: 61px;background-color: rgba(0, 0, 0, .5);padding: 8px 0 8px 48px;}
+.detailsImage div span:nth-child(1) {display: inline-block;border-left: 3px solid #72b16a;height: 44px;}
+.detailsImage div span:nth-child(2) {color: #fff;line-height: 44px;vertical-align: top;padding-left: 12px;padding-right: 6px;font-size: 26px;font-family: "MicrosoftYahei"}
+.detailsImage div span:nth-child(3) {color: #76b16a;line-height: 44px;vertical-align: top;font-style: italic;}
+.details .detailsBox {width: 459px;height: 318px;background-color: #eeedd6;margin-top: 30px;padding-right: 20px;box-sizing: border-box;color: #5a5b5b;}
+.details .detailsBox ul {font: 16px/36px "simsun";padding-left: 40px;padding-top: 20px;text-align: left;height: 138px;}
+.details .detailsBox ul span {font-size: 12px;text-align: right;}
+.detailsBox .detailsBoxLf { width: 264px; background-color: #d45d5c; float: left; padding: 40px 13px; color: #fff; box-sizing: border-box; height: 160px;}
+.detailsBox .detailsBoxRg { float: right; width: 161px; box-sizing: border-box; position: relative; font: italic 14px/16px "SimHei"; padding-top: 20px; height: 140px;}
+.detailsBox .detailsBoxLf .detailsBoxLfLeft { font: 110px/86px "MicrosoftYahei"; height: 86px; border-right: 2px solid #fff; float: left; width: 28%;}
+.detailsBoxLf .detailsBoxLfRight { float: right; padding-left: 5px; width: 68%;}
+.detailsBoxLf .detailsBoxLfRightTop {font: italic 21px/24px "SimHei";}
+.detailsBoxLf .detailsBoxLfRightBottom {font: 12px/18px "SimHei";}
+.detailsBox .detailsBoxRg span {position: relative;color: #d45d5c;font-size: 72px;vertical-align: text-bottom;font-style: normal;width: 36px;display: inline-block;}
+.detailsBox .detailsBoxRg span:nth-child(1) {left: -40px; top: 16px;}
+.detailsBox .detailsBoxRg span:nth-child(2) { right: -52px; bottom: -32px;}
+/* ---------------》脚部《---------------- */
+.footer { height: 60px; border-top: 1px solid #938e8c; margin-top: 40px;}
+.footer span {float: right;color: #d45d5c;font-family: "SimHei";}
