@@ -1,0 +1,73 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+div {
+    padding: 20px;
+    background-color: #eee;
+    border: 1px solid #999;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    font: 400 16px "microsoftYaHei";
+    color: #222;
+}
+
+.container {
+    margin: 20px;
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    padding-right: 160px;
+    padding-left: 240px;
+}
+
+.team {
+    width: 200px;
+    background: #fff;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+.teamLogo {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #999;
+    margin-right: 12px;
+}
+
+.teamLogo,
+.teamName {
+    float: left;
+}
+
+.teamimages {
+    width: 120px;
+    float: right;
+    background: #fff;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.teamimages img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px
+}
+
+.teamimages img:last-child {
+    margin-bottom: 0px
+}
+
+.teamIntroduction {
+    width: 100%;
+}
+
+.teamIntroduction p {
+    margin-top: 10px;
+}

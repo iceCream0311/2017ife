@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="team">
+            <img src="images/logo.jpg" class="teamLogo" alt="四大才子">
+            <p class="teamName">
+                四大才子
+            </p>
+        </div>
+        <div class="teamIntroduction">
+            <h2>团队介绍</h2>
+            <p>&nbsp;&nbsp;人生的路，就是每个人都有每个人的做法，每个人都有每个人的想法，别人做什么，想什么，我们无法掌握，也无法控制。我们能做的，就是做好自己，管好自己，凭自己的本身</p>
+            <p>&nbsp;&nbsp;人生的路，就是每个人都有每个人的做法，每个人都有每个人的想法，别人做什么，想什么，我们无法掌握，也无法控制。我们能做的，就是做好自己，管好自己，凭自己的本身。 人生的路，就是每个人都有每个人的做法，每个人都有每个人的想法，别人做什么，想什么，我们无法掌握，也无法控制。我们能做的，就是做好自己，管好自己，凭自己的本身
+            </p>
+        </div>
+        <div class="teamimages">
+            <img src="images/1.jpg" alt="美女1">
+            <img src="images/1.jpg" alt="美女2">
+            <img src="images/2.jpg" alt="美女3">
+            <img src="images/2.jpg" alt="美女4">
+        </div>
+    </div>
+</body>
+<script>
+//图片模块的高度
+var teamimagesHeight = document.querySelector(".teamimages").offsetHeight;
+//介绍的高度
+var IntroductionHeight = document.querySelector(".teamIntroduction").offsetHeight;
+//比较得到最高的子盒子的高度
+var mainHeight = 0;
+if (teamimagesHeight > IntroductionHeight) {
+    mainHeight = teamimagesHeight;
+} else {
+    mainHeight = IntroductionHeight;
+}
+
+document.querySelector(".container").style.height = mainHeight + 40 + "px";
+</script>
+
+</html>
