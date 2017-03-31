@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+<style type="text/css">
+.content {padding-top: 50px;width: 600px; margin: 0 auto;}
+input {line-height: 18px; padding-left: 5px;}
+.texts { margin-top: 20px;}
+span {padding: 5px;line-height: 20px;background: red;display: inline-block;margin: 5px;color: #fff;font-size: 18px;font-weight: bold}
+textarea { width: 300px; height: 50px; padding: 5px;}
+</style>
+
+<body>
+    <div class="content">
+        <textarea id="contets" placeholder="请输入数据，数据较多时请用逗号或空格隔开"></textarea>
+        <button id="linput">左侧入</button>
+        <button id="rinput">右侧入</button>
+        <button id="lout">左侧出</button>
+        <button id="rout">右侧出</button>
+        <input type="text" placeholder="请输入" id="search" type="number">
+        <button onclick="search()">查询</button>
+        <div class="texts"></div>
+    </div>
+</body>
+<script type="text/javascript">
+function add(addDom) {
+    document.getElementById(addDom).onclick = function() {
+        var textareaText = document.querySelector("#contets").value;
+        var texts = document.querySelector(".texts");
+        /* 对多行文本内容进行处理*/
+        var textsArr = textareaText.split((/[、，,\n\t\s]+/))
+            /* 循环生成数据*/
+        if (mytrim(textareaText)) {
+            for (var i = 0; i < textsArr.length; i++) {
+                var spans = document.createElement("span")
+                spans.innerHTML = textsArr[i];
+
+                if (addDom == "rinput") {
+                    texts.appendChild(spans)
+                } else if (addDom == "linput") {
+                    // var first = texts.firstChild;
+                    var first = texts.childNodes[i];
+                    texts.insertBefore(spans, first)
+                }
+            }
+
+        } else {
+            document.querySelector("#contets").value = ""
+            alert("请输入要展示的数据")
+        }
+    }
+}
+
+function remove(addDom) {
+    document.getElementById(addDom).onclick = function() {
+        var texts = document.querySelector(".texts");
+        var childList = texts.childNodes;
+        if (!texts.innerHTML) {
+            alert("没有可以删除的元素了");
+            return;
+        }
+        if (addDom == "lout") {
+            var childs = childList[0];
+            var childsText = childs.innerHTML;
+            texts.removeChild(childs);
+            alert("已删除子元素" + childsText);
+
+        } else if (addDom == "rout") {
+            var chils = childList[childList.length - 1];
+            var chilsText = chils.innerHTML;
+            texts.removeChild(chils);
+            alert("已删除子元素" + chilsText);
+        }
+
+    };
+}
+add("linput");
+add("rinput");
+remove("lout");
+remove("rout");
+
+function search() {
+    var searchText = document.getElementById("search").value;
+    searchText = mytrim(searchText);
+    var texts = document.querySelector(".texts");
+    var childList = texts.childNodes;
+    if (!searchText) {
+        alert("请输入你要查询的内容")
+
+    } else {
+        for (var i = 0; i < childList.length; i++) {
+            var test = childList[i].innerHTML;
+            if (test.indexOf(searchText) > -1) {
+                childList[i].style.backgroundColor = "blue"
+            } else {
+                childList[i].style.backgroundColor = "red"
+            }
+        }
+    }
+}
+
+
+/*去左空格*/
+function ltrim(s) {
+    //s.replace( /^\s*/, "")
+    //如果是去掉半角和全角空格就把 \s 替换成   [" "|"　"] 就变成
+    //s.replace( /^[" "|" "]*/, "");
+    return s.replace(/^\s*/, "").replace(/^[" "|"　"]*/, "");
+}
+/*去右空格*/
+function rtrim(s) {
+    return s.replace(/\s*$/, "").replace(/[" "|"　"]*$/, "");
+}
+/*去空格函数 */
+function mytrim(str) {
+    if (!str) {
+        return "";
+    }
+    return rtrim(ltrim(str));
+}
+</script>
+
+</html>
