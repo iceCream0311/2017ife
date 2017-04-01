@@ -46,24 +46,15 @@ var cube = new THREE.Mesh(new THREE.CubeGeometry(3, 4, 1.8), //x、y、z
 cube.castShadow = true;
 scene.add(cube); /*一定要把创建好的放到场景中*/
 
-/*var wheeltexture = THREE.ImageUtils.loadTexture('images/wheel.png', {}, function() {
+var wheeltexture = THREE.ImageUtils.loadTexture('images/wheel.jpg', {}, function() {
     renderer.render(scene, camera);
 });
 var wheelmaterial = new THREE.MeshLambertMaterial({
-    map: wheel1texture
-});*/
+    map: wheeltexture
+});
 
-var wheel1 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), new THREE.MeshLambertMaterial({
-        color: "#858585",
-        emissive: "#404040"
-    }) //用来设置物体的颜色
-);
-var wheel2 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18),
-    new THREE.MeshLambertMaterial({
-        color: "#858585",
-        emissive: "#404040"
-    }) //用来设置物体的颜色
-);
+var wheel1 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
+var wheel2 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
 wheel1.position.set(1.1, -2, 0.9);
 wheel2.position.set(-0.8, -2, 0.9);
 scene.add(wheel1);
@@ -92,8 +83,8 @@ spotLight.target = cube
 
 spotLight.castShadow = true;
 spotLight.shadowCameraNear = 2;
-spotLight.shadowCameraFar = 50;
-spotLight.shadowCameraFov = 10;
+spotLight.shadowCameraFar = 10;
+spotLight.shadowCameraFov = 30;
 spotLight.shadow.camera.visible = true;
 spotLight.shadow.mapSize.Width = 1024;
 spotLight.shadow.mapSize.Height = 1024;
