@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <canvas id="mainCanvas" width="900px" height="537px"></canvas>
+    <button onclick="Forward()">前进</button>
+    <button onclick="BackOff()">后退</button>
+    <button onclick="TurnLeft()">转弯</button>
+    <button onclick="stop()">停止</button>
+</body>
+<script type="text/javascript" src="../three/three.js"></script>
+<script type="text/javascript" src="../three/stat.js"></script>
+<script type="text/javascript">
+/********* ************1、创建画布******************/
+var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+window.requestAnimationFrame = requestAnimationFrame;
+var stat = new Stats();
+stat.domElement.style.position = 'absolute';
+stat.domElement.style.right = '0px';
+stat.domElement.style.top = '0px';
+document.body.appendChild(stat.domElement);
+var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('mainCanvas')
+});
+
+
+
+renderer.setClearColor('#404040'); /*404040*/
+renderer.shadowMapEnabled = true;
+renderer.shadowMapSoft = true;
+
+/********************2、创建场景**************/
+var scene = new THREE.Scene();
+
+/********************3、创建正交投影照相机**************/
+
+var camera = new THREE.OrthographicCamera(-5, 5, 5, -5, 1, 100);
+camera.position.set(4, 5, 4);
+camera.lookAt(new THREE.Vector3(0, 0, 0));
+scene.add(camera);
+var light = new THREE.DirectionalLight()
+light.position.set(1, 4.8, 5)
+scene.add(light)
+
+/*********************4、创建物体********************/
+var materials = [];
+for (var i = 0; i < 6; ++i) {
+    materials.push(new THREE.MeshBasicMaterial({
+        map: THREE.ImageUtils.loadTexture('images/img' + i + '.png', {}, function() {
+            renderer.render(scene, camera);
+        }),
+        overdraw: true
+    }));
+}
+
+var cube = new THREE.Mesh(new THREE.CubeGeometry(3, 4, 1.8), //x、y、z
+    new THREE.MeshFaceMaterial(materials)
+);
+cube.castShadow = true;
+scene.add(cube); /*一定要把创建好的放到场景中*/
+
+var wheeltexture = THREE.ImageUtils.loadTexture('images/wheel.jpg', {}, function() {
+    renderer.render(scene, camera);
+});
+var wheelmaterial = new THREE.MeshLambertMaterial({
+    map: wheeltexture
+});
+
+var wheel1 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
+var wheel2 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
+var wheel3 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
+var wheel4 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
+wheel1.position.set(0.85, -2, 0.9);
+wheel2.position.set(-0.8, -2, 0.9);
+wheel3.position.set(0.85, -2, -0.9);
+wheel4.position.set(-0.8, -2, -0.9);
+scene.add(wheel1);
+scene.add(wheel2);
+scene.add(wheel3);
+scene.add(wheel4);
+/*********************用来投射光的画布****************/
+var floortexture = THREE.ImageUtils.loadTexture('images/floor.png', {}, function() {
+    renderer.render(scene, camera);
+});
+var floormaterial = new THREE.MeshLambertMaterial({
+    map: floortexture
+});
+var floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 8, 0), floormaterial)
+floor.position.y = -3;
+floor.position.z = -1;
+floor.rotation.x = -Math.PI / 2;
+scene.add(floor);
+/*产生阴影*/
+cube.castShadow = true;
+/*接收阴影*/
+floor.receiveShadow = true
+    /**********************增加聚光灯**********************/
+var spotLight = new THREE.SpotLight(0xffffff, 1, 100, Math.PI / 5, 25)
+spotLight.position.set(-1.2, 9, 2);
+spotLight.target = cube
+    /****************************产生阴影**********/
+
+spotLight.castShadow = true;
+spotLight.shadowCameraNear = 2;
+spotLight.shadowCameraFar = 10;
+spotLight.shadowCameraFov = 30;
+spotLight.shadow.camera.visible = true;
+spotLight.shadow.mapSize.Width = 1024;
+spotLight.shadow.mapSize.Height = 1024;
+spotLight.shadow.darkness = 0.1;
+scene.add(spotLight);
+/*渲染光影*/
+renderer.shadowMap.enabled = true;
+
+/***************************5、渲染**************************/
+renderer.render(scene, camera);
+
+/*动画*/
+id = requestAnimationFrame(draw);
+var v = 0,
+    forward = false,
+    backOff = false,
+    turnleft = false,
+    a = -0.01,
+    forwardflag = 1,
+    backOffflag = 1,
+    roate = 0;
+
+function draw() {
+    stat.begin();
+
+    if (forward) {
+        cube.position.x += a;
+        wheel1.position.x += a;
+        wheel2.position.x += a;
+        wheel3.position.x += a;
+        wheel4.position.x += a;
+        if (cube.position.x < forwardflag) {
+            forward = false;
+            forwardflag++;
+        }
+    } else if (backOff) {
+        cube.position.x -= a;
+        wheel1.position.x -= a;
+        wheel2.position.x -= a;
+        wheel3.position.x -= a;
+        wheel4.position.x -= a;
+        if (cube.position.x > backOffflag) {
+            backOff = false;
+            backOffflag++;
+        }
+
+    } else if (turnleft) {
+        cube.rotation.y = (cube.rotation.y + 0.01) % (Math.PI * 2)
+        wheel1.rotation.y = (cube.rotation.y + 0.01) % (Math.PI * 2)
+        wheel2.rotation.y = (cube.rotation.y + 0.01) % (Math.PI * 2)
+        wheel3.rotation.y = (cube.rotation.y + 0.01) % (Math.PI * 2)
+        wheel4.rotation.y = (cube.rotation.y + 0.01) % (Math.PI * 2)
+        if (cube.rotation.y > roate) {
+            turnleft = false;
+        }
+        if (cube.rotation.y >= Math.PI * 2 - 0.01) {
+            cube.rotation.y = 0
+            roate = 0
+        }
+
+    }
+    renderer.render(scene, camera);
+    id = requestAnimationFrame(draw);
+    stat.end();
+}
+
+function stop() {
+    forward = false;
+    backOff = false;
+    turnleft = false;
+}
+
+function Forward() {
+    stop();
+    forward = true;
+    forwardflag = cube.position.x - 2;
+}
+
+function BackOff() {
+    stop();
+    backOff = true;
+    backOffflag = cube.position.x + 2;
+}
+
+function TurnLeft() {
+    stop();
+    turnleft = true;
+    roate = cube.rotation.y + 0.5
+}
+</script>
+
+</html>
