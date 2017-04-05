@@ -14,7 +14,6 @@
     <button onclick="stop()">停止</button>
 </body>
 <script type="text/javascript" src="../three/three.js"></script>
-<script type="text/javascript" src="../three/TrackballControls.js"></script>
 <script type="text/javascript" src="../three/stat.js"></script>
 <script type="text/javascript">
 /********* ************1、创建画布******************/
@@ -28,41 +27,25 @@ document.body.appendChild(stat.domElement);
 var renderer = new THREE.WebGLRenderer({
     canvas: document.getElementById('mainCanvas')
 });
+
 renderer.setClearColor('#404040'); /*404040*/
 renderer.shadowMapEnabled = true;
 renderer.shadowMapSoft = true;
 
 /********************2、创建场景**************/
 var scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
+
 /********************3、创建正交投影照相机**************/
-/*var camera = new THREE.OrthographicCamera(-5, 5, 5, -5, 1, 100);不能滚动放大放小*/
-var camera = new THREE.PerspectiveCamera(60, 900 / 537, 1, 1000)
+
+var camera = new THREE.OrthographicCamera(-5, 5, 5, -5, 1, 100);
 camera.position.set(4, 5, 4);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
-/********************4、控制器**************/
-
-var controls = new THREE.TrackballControls(camera);
-controls.rotateSpeed = 1.0;
-controls.zoomSpeed = 1;
-controls.panSpeed = 0.8;
-controls.noZoom = false;
-controls.noPan = false;
-controls.staticMoving = true;
-controls.dynamicDampingFactor = 0.3;
-controls.keys = [65, 83, 68];
-controls.addEventListener('change', render);
-
-
-
-
-
-/*********************5、光源********************/
+scene.add(camera);
 var light = new THREE.DirectionalLight()
 light.position.set(1, 4.8, 5)
 scene.add(light)
-    /*********************6、创建物体********************/
-    /*************车***********/
+
+/*********************4、创建物体********************/
 var materials = [];
 for (var i = 0; i < 6; ++i) {
     materials.push(new THREE.MeshBasicMaterial({
@@ -72,27 +55,29 @@ for (var i = 0; i < 6; ++i) {
         overdraw: true
     }));
 }
-var cube = new THREE.Mesh(new THREE.CubeGeometry(3, 2.5, 1.8),
+
+var cube = new THREE.Mesh(new THREE.CubeGeometry(3, 4, 1.8), //x、y、z
     new THREE.MeshFaceMaterial(materials)
 );
 cube.castShadow = true;
 
 
-/***********轮子************/
 var wheeltexture = THREE.ImageUtils.loadTexture('images/wheel.jpg', {}, function() {
     renderer.render(scene, camera);
 });
 var wheelmaterial = new THREE.MeshLambertMaterial({
     map: wheeltexture
 });
+
 var wheel1 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
 var wheel2 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
 var wheel3 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
 var wheel4 = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.2, 12, 18), wheelmaterial);
-wheel1.position.set(0.85, -1.2, 0.9);
-wheel2.position.set(-0.8, -1.2, 0.9);
-wheel3.position.set(0.85, -1.2, -0.9);
-wheel4.position.set(-0.8, -1.2, -0.9);
+wheel1.position.set(0.85, -2, 0.9);
+wheel2.position.set(-0.8, -2, 0.9);
+wheel3.position.set(0.85, -2, -0.9);
+wheel4.position.set(-0.8, -2, -0.9);
+/*将轮子和填到车上这样就成了一个整体，进行动画时会简单很多*/
 cube.add(wheel1);
 cube.add(wheel2);
 cube.add(wheel3);
@@ -105,8 +90,8 @@ var floortexture = THREE.ImageUtils.loadTexture('images/floor.png', {}, function
 var floormaterial = new THREE.MeshLambertMaterial({
     map: floortexture
 });
-var floor = new THREE.Mesh(new THREE.PlaneGeometry(1000, 8, 0), floormaterial)
-floor.position.y = -1.8;
+var floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 8, 0), floormaterial)
+floor.position.y = -3;
 floor.position.z = -1;
 floor.rotation.x = -Math.PI / 2;
 scene.add(floor);
@@ -132,21 +117,9 @@ scene.add(spotLight);
 /*渲染光影*/
 renderer.shadowMap.enabled = true;
 
-/***************************7、渲染**************************/
+/***************************5、渲染**************************/
 renderer.render(scene, camera);
-animate()
 
-
-
-
-function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-}
-
-function render() {
-    renderer.render(scene, camera);
-}
 /*动画*/
 id = requestAnimationFrame(draw);
 var v = 0,
@@ -273,7 +246,8 @@ function TurnRight() {
     stop();
     turnright = true;
     roater = cube.rotation.y - 0.2
-
+    console.log(cube.rotation.y)
+    console.log(roate)
 }
 </script>
 
