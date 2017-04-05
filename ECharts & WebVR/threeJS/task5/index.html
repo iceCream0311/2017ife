@@ -7,9 +7,10 @@
 
 <body>
     <canvas id="mainCanvas" width="900px" height="537px"></canvas>
-    <button onclick="Forward()">前进</button>
-    <button onclick="BackOff()">后退</button>
-    <button onclick="TurnLeft()">转弯</button>
+    <button onclick="Forward()">前进(W)</button>
+    <button onclick="BackOff()">后退(D)</button>
+    <button onclick="TurnLeft()">左转弯(A)</button>
+    <button onclick="TurnRight()">右转弯(S)</button>
     <button onclick="stop()">停止</button>
 </body>
 <script type="text/javascript" src="../three/three.js"></script>
@@ -26,8 +27,6 @@ document.body.appendChild(stat.domElement);
 var renderer = new THREE.WebGLRenderer({
     canvas: document.getElementById('mainCanvas')
 });
-
-
 
 renderer.setClearColor('#404040'); /*404040*/
 renderer.shadowMapEnabled = true;
@@ -61,7 +60,7 @@ var cube = new THREE.Mesh(new THREE.CubeGeometry(3, 4, 1.8), //x、y、z
     new THREE.MeshFaceMaterial(materials)
 );
 cube.castShadow = true;
-scene.add(cube); /*一定要把创建好的放到场景中*/
+
 
 var wheeltexture = THREE.ImageUtils.loadTexture('images/wheel.jpg', {}, function() {
     renderer.render(scene, camera);
@@ -78,10 +77,12 @@ wheel1.position.set(0.85, -2, 0.9);
 wheel2.position.set(-0.8, -2, 0.9);
 wheel3.position.set(0.85, -2, -0.9);
 wheel4.position.set(-0.8, -2, -0.9);
-scene.add(wheel1);
-scene.add(wheel2);
-scene.add(wheel3);
-scene.add(wheel4);
+/*将轮子和填到车上这样就成了一个整体，进行动画时会简单很多*/
+cube.add(wheel1);
+cube.add(wheel2);
+cube.add(wheel3);
+cube.add(wheel4);
+scene.add(cube); /*一定要把创建好的放到场景中*/
 /*********************用来投射光的画布****************/
 var floortexture = THREE.ImageUtils.loadTexture('images/floor.png', {}, function() {
     renderer.render(scene, camera);
@@ -125,30 +126,24 @@ var v = 0,
     forward = false,
     backOff = false,
     turnleft = false,
+    turnright = false,
     a = -0.01,
     forwardflag = 1,
     backOffflag = 1,
-    roate = 0;
+    roate = 0,
+    roater = 0;
 
 function draw() {
     stat.begin();
 
     if (forward) {
         cube.position.x += a;
-        wheel1.position.x += a;
-        wheel2.position.x += a;
-        wheel3.position.x += a;
-        wheel4.position.x += a;
         if (cube.position.x < forwardflag) {
             forward = false;
             forwardflag++;
         }
     } else if (backOff) {
         cube.position.x -= a;
-        wheel1.position.x -= a;
-        wheel2.position.x -= a;
-        wheel3.position.x -= a;
-        wheel4.position.x -= a;
         if (cube.position.x > backOffflag) {
             backOff = false;
             backOffflag++;
@@ -168,6 +163,22 @@ function draw() {
             roate = 0
         }
 
+    } else if (turnright) {
+        cube.rotation.y = (cube.rotation.y - 0.01) % (Math.PI * 2)
+        wheel1.rotation.y = (cube.rotation.y - 0.01) % (Math.PI * 2)
+        wheel2.rotation.y = (cube.rotation.y - 0.01) % (Math.PI * 2)
+        wheel3.rotation.y = (cube.rotation.y - 0.01) % (Math.PI * 2)
+        wheel4.rotation.y = (cube.rotation.y - 0.01) % (Math.PI * 2)
+        console.log(cube.rotation.y)
+        console.log("you" + roater)
+        if (cube.rotation.y < roater) {
+            turnright = false;
+        }
+        if (cube.rotation.y <= -(Math.PI * 2) + 0.01) {
+            cube.rotation.y = 0
+            roater = 0
+        }
+
     }
     renderer.render(scene, camera);
     id = requestAnimationFrame(draw);
@@ -178,16 +189,51 @@ function stop() {
     forward = false;
     backOff = false;
     turnleft = false;
+    turnright = false;
+}
+
+
+/***************************点击键盘**************************/
+
+document.onkeydown = function(event) {
+    var e = event || window.event || arguments.callee.caller.arguments[0];
+    switch (e.keyCode) {
+
+        case 87:
+            //W
+            Forward();
+            break;
+        case 83:
+            //S
+            TurnRight();
+            break;
+        case 65:
+            //A
+            TurnLeft();
+            break;
+        case 68:
+            //D
+            BackOff();
+            break;
+    }
 }
 
 function Forward() {
     stop();
+    wheel1.rotation.y = 0;
+    wheel2.rotation.y = 0;
+    wheel3.rotation.y = 0;
+    wheel4.rotation.y = 0;
     forward = true;
     forwardflag = cube.position.x - 2;
 }
 
 function BackOff() {
     stop();
+    wheel1.rotation.y = 0;
+    wheel2.rotation.y = 0;
+    wheel3.rotation.y = 0;
+    wheel4.rotation.y = 0;
     backOff = true;
     backOffflag = cube.position.x + 2;
 }
@@ -195,7 +241,15 @@ function BackOff() {
 function TurnLeft() {
     stop();
     turnleft = true;
-    roate = cube.rotation.y + 0.5
+    roate = cube.rotation.y + 0.2
+}
+
+function TurnRight() {
+    stop();
+    turnright = true;
+    roater = cube.rotation.y - 0.2
+    console.log(cube.rotation.y)
+    console.log(roate)
 }
 </script>
 
