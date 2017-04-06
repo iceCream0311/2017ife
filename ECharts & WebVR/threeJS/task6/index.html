@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+</body>
+<script type="text/javascript" src="../three/three.js"></script>
+<script type="text/javascript" src="../three/OBJLoader.js"></script>
+<script type="text/javascript">
+/********* ************1、创建画布******************/
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(900, 537)
+document.getElementsByTagName('body')[0].appendChild(renderer.domElement)
+renderer.setClearColor('#404040'); /*404040*/
+renderer.shadowMapEnabled = true;
+renderer.shadowMapSoft = true;
+
+/********************2、创建场景**************/
+var scene = new THREE.Scene();
+
+/********************3、创建正交投影照相机**************/
+
+var camera = new THREE.OrthographicCamera(-5, 5, 5, -5, 1, 100);
+camera.position.set(4, 5, 4);
+camera.lookAt(new THREE.Vector3(0, 0, 0));
+scene.add(camera);
+var light = new THREE.DirectionalLight()
+light.position.set(1, 4.8, 5)
+scene.add(light)
+    /*********************4、创建物体********************/
+var mesh = null;
+var loader = new THREE.OBJLoader();
+loader.load('./MiniCooperCountryan.obj', function(obj) {
+    obj.traverse(function(child) {
+        if (child instanceof THREE.Mesh) {
+            child.material = new THREE.MeshLambertMaterial({
+                color: 0x00ffff,
+                side: THREE.DoubleSide
+            });
+        }
+    });
+    obj.position.set(3, 2, 1.5)
+    mesh = obj;
+    scene.add(obj);
+});
+/*********************用来投射光的画布****************/
+var floortexture = THREE.ImageUtils.loadTexture('images/floor.png', {}, function() {
+    renderer.render(scene, camera);
+});
+var floormaterial = new THREE.MeshLambertMaterial({
+    map: floortexture
+});
+var floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 8, 0), floormaterial)
+floor.position.y = -3;
+floor.position.z = -1;
+floor.rotation.x = -Math.PI / 2;
+scene.add(floor);
+/*渲染光影*/
+renderer.shadowMap.enabled = true;
+
+/***************************5、渲染**************************/
+renderer.render(scene, camera);
+id = setInterval(draw, 20);
+flag = true;
+
+function draw() {
+    renderer.render(scene, camera);
+    if (flag) {
+        mesh.rotation.x = 1.5
+        mesh.rotation.y = Math.PI
+        flag = false;
+    }
+    mesh.rotation.z += 0.01;
+    if (mesh.rotation.z > Math.PI * 2) {
+        mesh.rotation.z -= Math.PI * 2;
+    }
+}
+</script>
+
+</html>

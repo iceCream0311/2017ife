@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+</body>
+<script type="text/javascript" src="../three/three.js"></script>
+<script type="text/javascript" src="../three/MTLLoader.js"></script>
+<script type="text/javascript" src="../three/OBJLoader.js"></script>
+<script type="text/javascript">
+/********* ************1、创建画布******************/
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(900, 537)
+document.getElementsByTagName('body')[0].appendChild(renderer.domElement)
+renderer.setClearColor('#404040');
+
+/********************2、创建场景**************/
+var scene = new THREE.Scene();
+
+/********************3、创建正交投影照相机**************/
+
+var camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100);
+camera.position.set(15, 25, 25);
+camera.lookAt(new THREE.Vector3(0, 0, 0));
+scene.add(camera);
+/********************4、光源**************/
+var light = new THREE.PointLight(0xffffff, 2, 100);
+light.position.set(1, 4.8, 5);
+scene.add(light);
+/*********************5、创建物体********************/
+var mesh = null;
+var mtlLoader = new THREE.MTLLoader();
+mtlLoader.setPath('./');
+mtlLoader.load('MiniCooperCountryan.mtl', function(materials) {
+    materials.preload();
+
+    // model loader
+    var objLoader = new THREE.OBJLoader();
+    objLoader.setMaterials(materials);
+    objLoader.setPath('./');
+    objLoader.load('MiniCooperCountryan.obj', function(object) {
+        mesh = object;
+        object.position.y = 10;
+        object.position.z = -1;
+        object.position.x = 3;
+        object.rotation.y = Math.PI;
+        // if has object, add to scene
+        if (object.children.length > 0) {
+            scene.add(object.children[0]);
+        }
+    });
+});
+/***************************6、渲染**************************/
+
+id = setInterval(draw, 20);
+flag = true;
+
+function draw() {
+    renderer.render(scene, camera);
+}
+</script>
+
+</html>
