@@ -103,7 +103,12 @@ function onProgress(xhr) {
     if (xhr.lengthComputable) {
         var percentComplete = xhr.loaded / xhr.total * 100;
         document.querySelector(".bar").style.width = 9 * Math.round(percentComplete, 2) + "px"
-        document.querySelector(".bar").innerHTML = Math.round(percentComplete, 2) + '%'
+        if(Math.round(percentComplete, 2)<100){
+            document.querySelector(".bar").innerHTML = Math.round(percentComplete, 2) + '%'
+        }else{
+             document.querySelector(".bar").innerHTML ="";
+        }
+
     }
 };
 
