@@ -27,23 +27,27 @@
 
         // material loader
         var mtlLoader = new THREE.MTLLoader();
-        mtlLoader.setPath('./');
-        mtlLoader.load('MiniCooperCountryan.mtl', function(materials) {
+        mtlLoader.load('port.mtl', function(materials) {
             materials.preload();
 
             // model loader
             var objLoader = new THREE.OBJLoader();
             objLoader.setMaterials(materials);
-            objLoader.setPath('./');
-            objLoader.load('MiniCooperCountryan.obj', function(object) {
-                object.position.y = -95;
-                // 没有找到方法旋转
-                /* mesh = object*/
+            objLoader.load('port.obj', function(object) {
+                /*不旋转
                 if (object.children.length > 0) {
                     scene.add(object.children[0]);
-                    mesh = object.children[0]
-                }
-
+                }*/
+                object.traverse(function(child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.material = new THREE.MeshLambertMaterial({
+                            color: 0x00ffff,
+                            side: THREE.DoubleSide
+                        });
+                    }
+                });
+                mesh = object;
+                scene.add(object);
             });
         });
 
@@ -56,12 +60,10 @@
 
     function draw() {
         renderer.render(scene, camera);
-        // 没有找到方法旋转
-        /* console.log(mesh.rotation.y)
-         mesh.rotation.y += 0.01;
-         if (mesh.rotation.y > Math.PI * 2) {
-             mesh.rotation.y -= Math.PI * 2;
-         }*/
+        mesh.rotation.y += 0.01;
+        if (mesh.rotation.y > Math.PI * 2) {
+            mesh.rotation.y -= Math.PI * 2;
+        }
     }
     </script>
 </head>

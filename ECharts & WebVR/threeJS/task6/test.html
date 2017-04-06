@@ -1,66 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="utf-8">
+    <title>小车模型</title>
+    <script type="text/javascript" src="../three/three.js"></script>
+    <script type="text/javascript" src="../three/OBJLoader.js"></script>
+    <script type="text/javascript" src="../three/MTLLoader.js"></script>
+    <script type="text/javascript" src="../three/stats.min.js"></script>
 </head>
 
 <body>
-</body>
-<script type="text/javascript" src="../three/three.js"></script>
-<script type="text/javascript" src="../three/MTLLoader.js"></script>
-<script type="text/javascript" src="../three/OBJLoader.js"></script>
-<script type="text/javascript">
-/********* ************1、创建画布******************/
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize(900, 537)
-document.getElementsByTagName('body')[0].appendChild(renderer.domElement)
-renderer.setClearColor('#404040');
+    <script type="text/javascript">
+    window.onload = function() {
+        var requestAnimationFrame = window.requestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.msRequestAnimationFrame;
+        window.requestAnimationFrame = requestAnimationFrame;
 
-/********************2、创建场景**************/
-var scene = new THREE.Scene();
+        var renderer, scene, camera, mesh, stats;
 
-/********************3、创建正交投影照相机**************/
+        init();
 
-var camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100);
-camera.position.set(15, 25, 25);
-camera.lookAt(new THREE.Vector3(0, 0, 0));
-scene.add(camera);
-/********************4、光源**************/
-var light = new THREE.PointLight(0xffffff, 2, 100);
-light.position.set(1, 4.8, 5);
-scene.add(light);
-/*********************5、创建物体********************/
-var mesh = null;
-var mtlLoader = new THREE.MTLLoader();
-mtlLoader.setPath('./');
-mtlLoader.load('MiniCooperCountryan.mtl', function(materials) {
-    materials.preload();
+        function init() {
+            renderer = new THREE.WebGLRenderer();
+            renderer.setClearColor(0xeeeeee);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            document.getElementsByTagName('body')[0].appendChild(renderer.domElement);
 
-    // model loader
-    var objLoader = new THREE.OBJLoader();
-    objLoader.setMaterials(materials);
-    objLoader.setPath('./');
-    objLoader.load('MiniCooperCountryan.obj', function(object) {
-        mesh = object;
-        object.position.y = 10;
-        object.position.z = -1;
-        object.position.x = 3;
-        object.rotation.y = Math.PI;
-        // if has object, add to scene
-        if (object.children.length > 0) {
-            scene.add(object.children[0]);
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000);
+            camera.position.set(3000, 1000, 3600);
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+            scene.add(camera);
+
+            var light = new THREE.SpotLight(0xffffff, 2, 20000, Math.PI / 2);
+            light.position.set(2000, 1020, 3680);
+            light.castShadow = true;
+            scene.add(light);
+
+            var mtlLoader = new THREE.MTLLoader();
+            mtlLoader.load('mazda.mtl', function(materials) {
+                materials.preload();
+                var objLoader = new THREE.OBJLoader();
+                objLoader.setMaterials(materials);
+                objLoader.load('mazda.obj', function(obj) {
+                    obj.traverse(function(child) {
+                        if (child instanceof THREE.Mesh) {
+                            child.material.side = THREE.DoubleSide;
+                        }
+                    });
+                    mesh = obj;
+                    scene.add(obj);
+                }, onProgress, onError)
+            })
+
+            // model
+            var onProgress = function(xhr) {
+                if (xhr.lengthComputable) {
+                    var percentComplete = xhr.loaded / xhr.total * 100;
+                    console.log(Math.round(percentComplete, 2) + '% downloaded');
+                }
+            };
+            var onError = function(xhr) {};
+
+            stats = new Stats();
+            document.getElementsByTagName('body')[0].appendChild(stats.domElement);
+            //renderer.render(scene, camera);
+
+            setInterval(draw, 20);
         }
-    });
-});
-/***************************6、渲染**************************/
 
-id = setInterval(draw, 20);
-flag = true;
-
-function draw() {
-    renderer.render(scene, camera);
-}
-</script>
+        function draw() {
+            stats.begin();
+            mesh.rotation.y += 0.01;
+            if (mesh.rotation.y > Math.PI * 2) {
+                mesh.rotation.y -= Math.PI * 2;
+            }
+            renderer.render(scene, camera);
+            stats.end();
+        }
+    }
+    </script>
+</body>
 
 </html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+    .progress-bar {
+        height: 30px;
+        width: 900px;
+        background-color: #ccc
+    }
+    
+    canvas {
+        margin: 0 auto
+    }
+    </style>
+</head>
+
+<body>
+    <div class="progress-bar"></div>
+</body>
+<script type="text/javascript" src="../three/three.js"></script>
+<script type="text/javascript" src="../three/OBJLoader.js"></script>
+<script type="text/javascript" src="../three/MTLLoader.js"></script>
+<script type="text/javascript">
+/********* ************1、创建画布******************/
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(900, 450)
+document.getElementsByTagName('body')[0].appendChild(renderer.domElement)
+renderer.setClearColor(0xeeeeee); /*404040*/
+renderer.shadowMapEnabled = true;
+
+/********************2、创建场景**************/
+var scene = new THREE.Scene();
+
+/********************3、创建正交投影照相机**************/
+
+var camera = new THREE.PerspectiveCamera(60, 2, 1, 20000);
+camera.position.set(3000, 1000, 3600);
+camera.lookAt(new THREE.Vector3(0, 0, 0));
+scene.add(camera);
+var light = new THREE.DirectionalLight()
+light.position.set(1, 4.8, 5)
+scene.add(light)
+    /*********************4、创建物体********************/
+var mesh = null;
+var mtlLoader = new THREE.MTLLoader();
+mtlLoader.load("mazda.mtl", function(materials) {
+    materials.preload();
+    var loader = new THREE.OBJLoader();
+    //使用材质本身的颜色
+    loader.setMaterials(materials);
+    loader.load('mazda.obj', function(obj) {
+        obj.traverse(function(child) {
+            if (child instanceof THREE.Mesh) {
+                child.material.side = THREE.DoubleSide;
+            }
+        });
+        obj.position.set(3, 4, 1.5)
+        mesh = obj;
+        scene.add(obj);
+    }, onProgress, onError)
+
+});
+
+/*渲染光影*/
+renderer.shadowMap.enabled = true;
+setInterval(draw, 20);
+/*加载函数（可以不写）*/
+function onProgress(xhr) {
+    if (xhr.lengthComputable) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log(Math.round(percentComplete, 2) + '% downloaded');
+    }
+};
+
+/*加载出错函数（可以不写）*/
+function onError(xhr) {
+    console.log(xhr)
+};
+
+function draw() {
+    renderer.render(scene, camera);
+    /*mesh.rotation.y = 2.3*/
+    mesh.rotation.y += 0.01;
+    if (mesh.rotation.y > Math.PI * 2) {
+        mesh.rotation.y -= Math.PI * 2;
+    }
+    renderer.render(scene, camera);
+}
+</script>
+
+</html>
