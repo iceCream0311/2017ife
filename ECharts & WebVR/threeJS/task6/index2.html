@@ -4,26 +4,32 @@
 <head>
     <meta charset="utf-8">
     <style type="text/css">
-    .progress-bar {
-        height: 30px;
-        width: 900px;
-        background-color: #ccc
-    }
-    
-    canvas {
-        margin: 0 auto
-    }
+        .progress-bar {height: 30px; width: 900px; background-color: #ccc  }
+        .bar {width: 0;height: 30px;color: #fff; background-color: #404040 }
+        canvas { margin: 0 auto}
     </style>
 </head>
 
 <body>
-    <div class="progress-bar"></div>
+    <div class="progress-bar">
+        <div class="bar"></div>
+    </div>
 </body>
 <script type="text/javascript" src="../three/three.js"></script>
 <script type="text/javascript" src="../three/OBJLoader.js"></script>
 <script type="text/javascript" src="../three/MTLLoader.js"></script>
+<script type="text/javascript" src="../three/TrackballControls.js"></script>
+<script type="text/javascript" src="../three/stat.js"></script>
 <script type="text/javascript">
 /********* ************1、创建画布******************/
+var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+window.requestAnimationFrame = requestAnimationFrame;
+var stat = new Stats();
+stat.domElement.style.position = 'absolute';
+stat.domElement.style.right = '0px';
+stat.domElement.style.top = '0px';
+document.body.appendChild(stat.domElement);
+
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(900, 450)
 document.getElementsByTagName('body')[0].appendChild(renderer.domElement)
@@ -39,10 +45,35 @@ var camera = new THREE.PerspectiveCamera(60, 2, 1, 20000);
 camera.position.set(3000, 1000, 3600);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 scene.add(camera);
+/********************4、控制器**************/
+
+var controls = new THREE.TrackballControls(camera);
+controls.rotateSpeed = 1.0;
+controls.zoomSpeed = 1;
+controls.panSpeed = 0.8;
+controls.noZoom = false;
+controls.noPan = false;
+controls.staticMoving = true;
+controls.dynamicDampingFactor = 0.3;
+controls.keys = [65, 83, 68];
+controls.addEventListener('change', render);
+/*********************5、光源********************/
 var light = new THREE.DirectionalLight()
 light.position.set(1, 4.8, 5)
 scene.add(light)
-    /*********************4、创建物体********************/
+    /*********************6、地面********************/
+var floortexture = THREE.ImageUtils.loadTexture('images/floor.png', {}, function() {
+    renderer.render(scene, camera);
+});
+var floormaterial = new THREE.MeshLambertMaterial({
+    map: floortexture
+});
+var floor = new THREE.Mesh(new THREE.PlaneGeometry(300000, 8000, 500), floormaterial)
+floor.position.y = 4;
+floor.position.z = 10;
+floor.rotation.x = -Math.PI / 2;
+scene.add(floor);
+/*********************7、创建小车********************/
 var mesh = null;
 var mtlLoader = new THREE.MTLLoader();
 mtlLoader.load("mazda.mtl", function(materials) {
@@ -56,12 +87,13 @@ mtlLoader.load("mazda.mtl", function(materials) {
                 child.material.side = THREE.DoubleSide;
             }
         });
-        obj.position.set(3, 4, 1.5)
+        obj.position.set(3, 0, 1000)
         mesh = obj;
         scene.add(obj);
     }, onProgress, onError)
 
 });
+animate()
 
 /*渲染光影*/
 renderer.shadowMap.enabled = true;
@@ -70,7 +102,8 @@ setInterval(draw, 20);
 function onProgress(xhr) {
     if (xhr.lengthComputable) {
         var percentComplete = xhr.loaded / xhr.total * 100;
-        console.log(Math.round(percentComplete, 2) + '% downloaded');
+        document.querySelector(".bar").style.width = 9 * Math.round(percentComplete, 2) + "px"
+        document.querySelector(".bar").innerHTML = Math.round(percentComplete, 2) + '%'
     }
 };
 
@@ -78,14 +111,129 @@ function onProgress(xhr) {
 function onError(xhr) {
     console.log(xhr)
 };
+/**********************动画***********************/
+var forward = false,
+    backOff = false,
+    turnleft = false,
+    turnright = false,
+    a = -100,
+    forwardflag = 1,
+    backOffflag = 1,
+    roate = 0,
+    roater = 0,
+    flages = true;
 
 function draw() {
+    stat.begin();
     renderer.render(scene, camera);
-    /*mesh.rotation.y = 2.3*/
-    mesh.rotation.y += 0.01;
-    if (mesh.rotation.y > Math.PI * 2) {
-        mesh.rotation.y -= Math.PI * 2;
+    if (flages) {
+        mesh.rotation.y = 1.5
+        flages = false
     }
+
+    /*前进后退没有仔细运算角度等问题，把x的正方向为前进，负方向为后退*/
+    if (forward) {
+        mesh.position.x += a;
+        if (mesh.position.x < forwardflag) {
+            forward = false;
+            forwardflag++;
+        }
+    } else if (backOff) {
+        mesh.position.x -= a;
+        if (mesh.position.x > backOffflag) {
+            backOff = false;
+            backOffflag++;
+        }
+
+    } else if (turnleft) {
+        mesh.rotation.y = (mesh.rotation.y + 0.01) % (Math.PI * 2)
+        if (mesh.rotation.y > roate) {
+            turnleft = false;
+        }
+        if (mesh.rotation.y >= Math.PI * 2 - 0.01) {
+            mesh.rotation.y = 0
+            roate = 0
+        }
+
+    } else if (turnright) {
+        mesh.rotation.y = (mesh.rotation.y - 0.01) % (Math.PI * 2)
+        if (mesh.rotation.y < roater) {
+            turnright = false;
+        }
+        if (mesh.rotation.y <= -(Math.PI * 2) + 0.01) {
+            mesh.rotation.y = 0
+            roater = 0
+        }
+
+    }
+    renderer.render(scene, camera);
+    id = requestAnimationFrame(draw);
+    renderer.render(scene, camera);
+
+    stat.end();
+}
+/***************************点击键盘**************************/
+
+document.onkeydown = function(event) {
+    var e = event || window.event || arguments.callee.caller.arguments[0];
+    switch (e.keyCode) {
+        case 87:
+            //W
+            Forward();
+            break;
+        case 83:
+            //S
+            TurnRight();
+            break;
+        case 65:
+            //A
+            TurnLeft();
+            break;
+        case 68:
+            //D
+            BackOff();
+            break;
+    }
+}
+
+function stop() {
+    forward = false;
+    backOff = false;
+    turnleft = false;
+    turnright = false;
+}
+
+function Forward() {
+    stop();
+    forward = true;
+    forwardflag = mesh.position.x - 200;
+}
+
+function BackOff() {
+    stop();
+    backOff = true;
+    backOffflag = mesh.position.x + 200;
+}
+
+function TurnLeft() {
+    stop();
+    turnleft = true;
+    roate = mesh.rotation.y + 0.2
+}
+
+function TurnRight() {
+    stop();
+    turnright = true;
+    roater = mesh.rotation.y - 0.2
+
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+}
+
+function render() {
     renderer.render(scene, camera);
 }
 </script>
