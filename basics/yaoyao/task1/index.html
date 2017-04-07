@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+          *{padding: 0;margin: 0}
+          body{font-size: 26px;line-height: 60px;}
+          div{margin: 100px auto;width: 780px;}
+          label{color: #444;width: 108px;display: inline-block;}
+          input{padding-left:24px;width: 516px; line-height: 60px; font-size: 26px; outline: none;border: 1px solid #ccc;border-radius: 6px;color:#555;}
+          a{color: #fff;background-color: #2f79ba;border-radius: 2px;display: inline-block;width: 100px;text-align: center;cursor: pointer;margin-left: 20px;border-radius: 4px; }
+          p{padding-left:108px;color:#aaa;font-size: 20px}
+        .error{color: #db000c; }
+        .errorinput{border-color: #db000c; }
+        .right{color:#5ebb46}
+        .rightinput{border-color: #5ebb46; }
+        </style>
+    </head>
+    <body>
+    <div>
+      <label for="name">名称</label><input type="text" name="name"><a>验证</a>
+      <p>必填，长度为4~16个字符</p>
+    </div>
+    </body>
+    <script type="text/javascript">
+
+      $("a").onclick=function(){
+        clickfn()
+      }
+
+    /**********回车执行*************/
+    $("input").onkeydown=function(event) {
+        if (event.keyCode == "13") {
+         clickfn()
+        }
+      };
+
+    /**********选择器函数*************/
+    function clickfn(){
+       /*匹配汉字字母数字*/
+        var regx=/^[\w\u4e00-\u9fa5]{2,16}$/
+       /* 匹配空格*/
+        var regxempty=/[\s\t]+/
+
+        var nameStr=$("input").value;
+        /************不为空时***********/
+        if(mytrim(nameStr)){
+           if (regx.test(nameStr)) {
+             $("p").innerHTML="姓名格式正确"
+             $("input").setAttribute("class","rightinput");
+             $("p").setAttribute("class","right");
+           }
+           else if (regxempty.test(nameStr)) {
+             $("p").innerHTML="姓名中不能含有空格"
+             $("input").setAttribute("class","errorinput");
+             $("p").setAttribute("class","error");
+           }
+           else{
+             $("p").innerHTML="姓名格式错误"
+             $("input").setAttribute("class","errorinput");
+             $("p").setAttribute("class","error");
+           }
+           /******为空时********/
+         }else{
+            $("input").value="";
+            $("p").innerHTML="姓名不能为空"
+            $("input").setAttribute("class","errorinput");
+            $("p").setAttribute("class","error");
+         }
+    }
+    /**********选择器函数*************/
+    function $(dom){
+        return document.querySelector(dom)
+    }
+
+    /**********去掉空格函数***********/
+      /*去左空格*/
+      function ltrim(s){
+        return s.replace( /^\s*/, "").replace( /^[" "|"　"]*/, "");
+       }
+      /*去右空格*/
+      function rtrim(s){
+        return s.replace( /\s*$/, "").replace( /[" "|"　"]*$/, "");
+      }
+      /*去掉左边和右边的空格*/
+      function mytrim(str){
+       if(!str){
+           return "";
+       }
+       return rtrim(ltrim(str));
+      }
+    </script>
+</html>
