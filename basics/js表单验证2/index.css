@@ -19,7 +19,7 @@ input {
 
 ul {
     width: 500px;
-    margin: 50px auto
+    margin: 50px auto 20px;
 }
 
 ul li {
@@ -68,4 +68,23 @@ p.error {
 
 p.success {
     color: #61c146
+}
+
+a {
+    width: 80px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: #2f79ba;
+    color: #fff;
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    line-height: 30px;
+}
+
+div {
+    width: 500px;
+    margin: 0 auto;
+    text-align: right;
 }
