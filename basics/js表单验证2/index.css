@@ -1,0 +1,71 @@
+* {
+    margin: 0;
+    padding: 0
+}
+
+input[type=text]:focus,
+input[type=password]:focus {
+    border: 1px solid #62adee;
+    border-radius: 5px;
+    box-shadow: 0px 0px 12px 1px #d3e8fb;
+}
+
+input {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    padding-left: 8px;
+}
+
+ul {
+    width: 500px;
+    margin: 50px auto
+}
+
+ul li {
+    list-style: none;
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: 10px;
+    padding-top: 5px;
+}
+
+ul li label {
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 15px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+ul li input {
+    float: left;
+    width: 374px;
+    height: 32px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+ul li p {
+    float: left;
+    padding-left: 115px;
+    color: #ababab;
+    display: none;
+}
+
+.error {
+    border-color: #e00011;
+}
+
+p.error {
+    color: #e00011
+}
+
+.success {
+    border-color: #61c146
+}
+
+p.success {
+    color: #61c146
+}
